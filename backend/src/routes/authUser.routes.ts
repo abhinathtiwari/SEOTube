@@ -17,7 +17,11 @@ router.post("/signup", async (req, res) => {
   const user = await User.create({ email, password: hashed });
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",   
+    secure: false      
+  });
   res.json({ message: "Signup successful" });
 });
 
@@ -30,10 +34,17 @@ router.post("/login", async (req, res) => {
   if (!user) return res.status(401).send("Invalid credentials");
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(401).send("Invalid credentials");
+  if (!valid) {
+    res.clearCookie("token");
+    return res.status(401).send("Invalid credentials");
+  }
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
-  res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",   
+    secure: false      
+    });
   res.json({ message: "Login successful" });
 });
 
