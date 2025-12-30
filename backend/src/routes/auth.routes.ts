@@ -2,21 +2,25 @@ import { Router } from "express";
 import { oauth2Client } from "../config/youtubeAuth";
 import { google } from "googleapis";
 import { User } from "../models/Users";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
 // Redirect to Google OAuth
-router.get("/youtube", (req, res) => {
+router.get("/youtube", authMiddleware, (req: any, res) => {
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
-    scope: ["https://www.googleapis.com/auth/youtube.force-ssl", "https://www.googleapis.com/auth/yt-analytics.readonly"],
+    scope: [
+      "https://www.googleapis.com/auth/youtube.force-ssl",
+      "https://www.googleapis.com/auth/yt-analytics.readonly"
+    ],
   });
   res.redirect(url);
 });
 
-//  OAuth callback
-router.get("/youtube/callback", async (req, res) => {
+// OAuth callback
+router.get("/youtube/callback", authMiddleware, async (req: any, res) => {
   const code = req.query.code as string;
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
@@ -28,18 +32,12 @@ router.get("/youtube/callback", async (req, res) => {
 
   if (!channel) return res.send("No channel found");
 
-  // Save refresh token in DB
-  await User.findOneAndUpdate(
-    { email: channel.snippet?.title || "unknown" },
-    {
-      email: channel.snippet?.title,
-      youtubeRefreshToken: tokens.refresh_token,
-      channelId: channel.id,
-    },
-    { upsert: true }
-  );
+  // Save refresh token and channel ID for logged-in user
+  req.user.youtubeRefreshToken = tokens.refresh_token || req.user.youtubeRefreshToken;
+  req.user.channelId = channel.id;
+  await req.user.save();
 
-  res.send("YouTube connected successfully!");
+  res.redirect(process.env.FRONTEND_BASE + "home.html");
 });
 
 export default router;
