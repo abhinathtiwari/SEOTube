@@ -135,13 +135,15 @@ h1,h2,h3,h4{margin:0;color:var(--text)}
 .thumbnail{width:160px;height:90px;object-fit:cover;border-radius:6px}
 
 .channel-card{
-  background: linear-gradient(180deg, rgba(124,92,255,0.06), rgba(37,99,235,0.03));
-  border:1px solid rgba(124,92,255,0.16);
-  padding:16px;
-  border-radius:12px;
+  /* slightly lighter panel for channel summary (still dark) */
+  background: linear-gradient(180deg, rgba(31, 81, 157, 0.244), rgba(0, 17, 255, 0.12));
+  border:1px solid rgba(255, 255, 255, 0.06);
+  padding:10px 12px;
   display:flex;
   align-items:center;
   gap:12px;
+  min-height:46px;
+  backdrop-filter: blur(2px);
 }
 
 .video-item .video-content{ text-align:left }
