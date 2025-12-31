@@ -1,67 +1,104 @@
 import { Router } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
-import { User } from "../models/Users";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
-router.get("/getData", async (req, res) => {
-  const user = await User.findOne({}); 
-  if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
+router.get("/getData", authMiddleware, async (req: any, res) => {
+  try {
+    const user = req.user; 
+    if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
 
-  oauth2Client.setCredentials({
-    refresh_token: user.youtubeRefreshToken,
-  });
+    oauth2Client.setCredentials({
+      refresh_token: user.youtubeRefreshToken,
+    });
 
-  const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+    const youtube = google.youtube({ version: "v3", auth: oauth2Client });
 
-  const response = await youtube.search.list({
-    part: ["id", "snippet"],
-    forMine: true,
-    type: ["video"],
-    maxResults: 100,
-  });
+    const response = await youtube.search.list({
+      part: ["id", "snippet"],
+      forMine: true,
+      type: ["video"],
+      maxResults: 100,
+    });
 
-  res.json(
-    response.data.items?.map(v => ({
-      videoId: v.id?.videoId,
-      title: v.snippet?.title,
-    }))
-  );
+    res.json(
+      response.data.items?.map(v => ({
+        videoId: v.id?.videoId,
+        title: v.snippet?.title,
+      }))
+    );
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch videos", error: err.message });
+  }
 });
 
 router.put("/update/:id", async (req, res) => {
-  const { title, description, tags } = req.body;
-  const videoId = req.params.id;
+  try {
+    const { title, description, tags, refreshToken } = req.body;
+    const videoId = req.params.id;
 
-  const user = await User.findOne({});
-  if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
+    if (!refreshToken) return res.status(400).json({ message: "Missing refreshToken" });
 
-  oauth2Client.setCredentials({
-    refresh_token: user.youtubeRefreshToken,
-  });
+    oauth2Client.setCredentials({ 
+      refresh_token: refreshToken,
+    });
 
-  const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+    const youtube = google.youtube({ version: "v3", auth: oauth2Client });
 
-  await youtube.videos.update({
-    part: ["snippet"],
-    requestBody: {
-      id: videoId,
-      snippet: {
-        title,
-        description,
-        tags,
-        categoryId: "22",
+    await youtube.videos.update({
+      part: ["snippet"],
+      requestBody: {
+        id: videoId,
+        snippet: {
+          title,
+          description,
+          tags,
+          categoryId: "22",
+        },
       },
-    },
-  });
+    });
 
-  res.json({ success: true });
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update video", error: err.message });
+  }
 });
 
 
-router.get("/analytics", async (req, res) => {
+router.post("/", async (req: any, res) => {
   try {
+    let refreshToken: string | undefined;
+    if (req.user?.youtubeRefreshToken) {
+       refreshToken = req.user.youtubeRefreshToken;
+    }
+
+    if (!refreshToken && req.body?.refreshToken) {
+      refreshToken = req.body.refreshToken;
+    }
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No auth source found" });
+    }
+
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+
+    const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+
+    // Get list of videos
+    const videosResponse = await youtube.search.list({
+      part: ["id", "snippet"],
+      forMine: true,
+      type: ["video"],
+      maxResults: 100,
+    });
+
+    const videoIds = videosResponse.data.items?.map(v => v.id?.videoId) || [];
+    if (videoIds.length === 0) return res.json({ leastPerforming: [] });
+
     const end = new Date();
     end.setMonth(end.getMonth() - 1);
 
@@ -71,19 +108,10 @@ router.get("/analytics", async (req, res) => {
     const startDate = start.toISOString().split("T")[0];
     const endDate = end.toISOString().split("T")[0];
 
-    const user = await User.findOne({});
-    if (!user?.youtubeRefreshToken) {
-      return res.status(401).json({ message: "YouTube not connected" });
-    }
-
-    oauth2Client.setCredentials({
-      refresh_token: user.youtubeRefreshToken,
-    });
-
-    const analytics = google.youtubeAnalytics({
-      version: "v2",
-      auth: oauth2Client,
-    });
+        const analytics = google.youtubeAnalytics({ 
+          version: "v2", 
+          auth: oauth2Client,
+        });
 
     const response = await analytics.reports.query({
       ids: "channel==MINE",
@@ -91,7 +119,7 @@ router.get("/analytics", async (req, res) => {
       endDate,
       dimensions: "video",
       metrics: "views,averageViewDuration",
-      sort: "-views",
+       sort: "-views",
       maxResults: 100,
     });
 
@@ -105,11 +133,20 @@ router.get("/analytics", async (req, res) => {
 
     const leastPerforming = videos
       .sort((a, b) => a.views - b.views)
-      .slice(0, 20);
+      .slice(0, parseInt(process.env.NUMBER_OF_VIDEOS!))
+      .map(v => {
+        const vid = videosResponse.data.items?.find(x => x.id?.videoId === v.videoId);
+        return {
+          videoId: v.videoId,
+          title: vid?.snippet?.title || "",
+          views: v.views,
+          averageViewDurationSeconds: v.averageViewDurationSeconds,
+        };
+      });
 
-    res.json({
-    leastPerforming
-    });
+    res.json({ 
+      leastPerforming
+     });
 
   } catch (error: any) {
     console.error("YouTube Analytics Error:", error?.response?.data || error);
