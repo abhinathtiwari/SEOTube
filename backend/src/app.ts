@@ -24,3 +24,4 @@ app.use("/youtube/analytics",authMiddleware,youtubeRoutes);
 app.use("/youtube/analytics-cron",youtubeRoutes);
 app.use("/ai", aiRoutes);
 app.use("/auth/user", authUserRoutes);
+app.use(express.static("public"));

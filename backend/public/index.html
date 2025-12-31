@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SEOTube Test</title>
+</head>
+<body>
+  <h2>SEOTube Test</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
+  <button onclick="connectYoutube()">Connect YouTube</button>
+
+  <script>
+    async function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) return alert("Enter email & password");
+
+      const res = await fetch("http://localhost:3000/auth/user/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password })
+      });
+
+      const text = await res.text();
+      if (res.ok) alert("Signup successful");
+      else alert("Signup failed: " + text);
+    }
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) return alert("Enter email & password");
+
+      const res = await fetch("http://localhost:3000/auth/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password })
+      });
+
+      const text = await res.text();
+      if (res.ok) alert("Logged in (cookie set)");
+      else alert("Login failed: " + text);
+    }
+
+    function connectYoutube() {
+      window.location.href = "http://localhost:3000/auth/youtube";
+    }
+  </script>
+</body>
+</html>
