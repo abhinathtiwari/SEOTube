@@ -1,6 +1,7 @@
 import axios from "axios";
 import { User } from "../models/Users";
 import cron from "node-cron";
+import { sendSuccessEmail } from "../utils/sendEmail";
 
 function buildPrompt(videos: any[]) {
   return `
@@ -83,6 +84,9 @@ export async function runSeoCron() {
           }
         );
       }
+
+      // Email notification
+      await sendSuccessEmail(user.email);
 
     } catch (err) {
       console.error(`Cron failed for user ${user._id}`, err);
