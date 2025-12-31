@@ -88,6 +88,18 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
 
+    const channelResponse = await youtube.channels.list({
+      part: ["snippet"],
+      mine: true,
+      maxResults: 1,
+    });
+
+    const channelData = {
+      channelName: channelResponse.data.items?.[0]?.snippet?.title || "",
+      logo : channelResponse.data.items?.[0]?.snippet?.thumbnails?.medium?.url,
+      customUrl : channelResponse.data.items?.[0]?.snippet?.customUrl
+    }
+
     // Get list of videos
     const videosResponse = await youtube.search.list({
       part: ["id", "snippet"],
@@ -159,6 +171,7 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
       });
 
     res.json({ 
+      channelData,
       leastPerforming
      });
 
