@@ -44,7 +44,7 @@ export async function runSeoCron() {
       // Get analytics
       console.log(user.email);
       const analyticsRes = await axios.post(
-        "http://localhost:3000/youtube/analytics-cron",
+        "http://localhost:3000/youtubecron/analytics",
         { refreshToken: user.youtubeRefreshToken }
       );
 

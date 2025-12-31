@@ -7,6 +7,7 @@ import youtubeRoutes from "./routes/youtube.routes";
 import aiRoutes from "./routes/ai.routes";
 import authUserRoutes from "./routes/authUser.routes";
 import { authMiddleware } from "./middleware/auth";
+import youtubeCronRoutes from "./routes/youtube.cron.routes";
 
 export const app = express();
 
@@ -19,9 +20,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
-app.use("/youtube",youtubeRoutes);
-app.use("/youtube/analytics",authMiddleware,youtubeRoutes);
-app.use("/youtube/analytics-cron",youtubeRoutes);
+app.use("/youtube", youtubeRoutes);          
+app.use("/youtubecron", youtubeCronRoutes); 
 app.use("/ai", aiRoutes);
 app.use("/auth/user", authUserRoutes);
 app.use(express.static("public"));

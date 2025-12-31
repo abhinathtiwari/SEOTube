@@ -7,6 +7,7 @@ const router = Router();
 
 // Signup
 router.post("/signup", async (req, res) => {
+  res.clearCookie("token");
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).send("Email and password required");
 
@@ -27,6 +28,7 @@ router.post("/signup", async (req, res) => {
 
 // Login
 router.post("/login", async (req, res) => {
+  res.clearCookie("token");
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).send("Email and password required");
 
