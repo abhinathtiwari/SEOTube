@@ -2,11 +2,11 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import authRoutes from "./routes/auth.routes";
+import authRoutes from "./routes/authYoutube.routes";
 import youtubeRoutes from "./routes/youtube.routes";
 import aiRoutes from "./routes/ai.routes";
 import authUserRoutes from "./routes/authUser.routes";
-import { authMiddleware } from "./middleware/auth";
+import { authMiddleware } from "./utils/middlewares";
 import youtubeCronRoutes from "./routes/youtube.cron.routes";
 
 export const app = express();

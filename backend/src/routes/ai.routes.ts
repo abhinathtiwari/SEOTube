@@ -29,7 +29,7 @@ router.post("/run", async (req, res) => {
 
     res.json({ output: parsed });
   } catch (err) {
-    res.status(500).json({ error: "Gemini API error" });
+    res.status(500).json(err);
   }
 });
 

@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { oauth2Client } from "../config/youtubeAuth";
 import { google } from "googleapis";
-import { User } from "../models/Users";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware } from "../utils/middlewares";
 
 const router = Router();
 

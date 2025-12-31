@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
-import { authMiddleware } from "../middleware/auth";
+import { authMiddleware } from "../utils/middlewares";
+import { getChannelData } from "../utils/channelData";
 
 const router = Router();
 
@@ -88,17 +89,7 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
 
-    const channelResponse = await youtube.channels.list({
-      part: ["snippet"],
-      mine: true,
-      maxResults: 1,
-    });
-
-    const channelData = {
-      channelName: channelResponse.data.items?.[0]?.snippet?.title || "",
-      logo : channelResponse.data.items?.[0]?.snippet?.thumbnails?.medium?.url,
-      customUrl : channelResponse.data.items?.[0]?.snippet?.customUrl
-    }
+    const channelData = await getChannelData(oauth2Client);
 
     // Get list of videos
     const videosResponse = await youtube.search.list({
