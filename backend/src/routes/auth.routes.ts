@@ -37,7 +37,7 @@ router.get("/youtube/callback", authMiddleware, async (req: any, res) => {
   req.user.channelId = channel.id;
   await req.user.save();
 
-  res.redirect(process.env.FRONTEND_BASE + "home.html");
+  res.redirect(process.env.FRONTEND_BASE!+"/home");
 });
 
 export default router;
