@@ -16,9 +16,18 @@ router.post("/run", async (req, res) => {
     const result = await model.generateContent(prompt);
     const raw = result.response.text();
     const clean = raw.replace(/```json|```/g, "").trim();
-    const json = JSON.parse(clean);
 
-    res.json({ output: json });
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch {
+      return res.status(400).json({
+        error: "Invalid JSON from AI",
+        raw,
+      });
+    }
+
+    res.json({ output: parsed });
   } catch (err) {
     res.status(500).json({ error: "Gemini API error" });
   }
