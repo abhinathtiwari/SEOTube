@@ -40,10 +40,9 @@ export default function Home() {
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      <h2>SEO Optimization</h2>
+     <h2>SEOTube</h2>
       <p>
-        We automatically optimize your least performing videos
-        every 15 days using AI.
+       Let AI handle your underperforming YouTube videos — optimized automatically every 15 days. ❤️
       </p>
     {channelData && (
     <div
