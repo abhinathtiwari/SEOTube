@@ -135,12 +135,26 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
       .sort((a, b) => a.views - b.views)
       .slice(0, parseInt(process.env.NUMBER_OF_VIDEOS!))
       .map(v => {
-        const vid = videosResponse.data.items?.find(x => x.id?.videoId === v.videoId);
+        const vid = videosResponse.data.items?.find(
+          x => x.id?.videoId === v.videoId
+        );
+
         return {
+          // Basic
           videoId: v.videoId,
           title: vid?.snippet?.title || "",
+          description: vid?.snippet?.description || "",
+          publishedAt: vid?.snippet?.publishedAt || null,
+          channelTitle: vid?.snippet?.channelTitle || "",
+          thumbnail: vid?.snippet?.thumbnails?.medium?.url || {},
+
+          // Analytics
           views: v.views,
           averageViewDurationSeconds: v.averageViewDurationSeconds,
+
+          //Links
+          videoUrl: `https://www.youtube.com/watch?v=${v.videoId}`,
+          studioUrl: `https://studio.youtube.com/video/${v.videoId}/edit`,
         };
       });
 
