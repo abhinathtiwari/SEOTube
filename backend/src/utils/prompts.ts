@@ -6,7 +6,7 @@ I will give you a list of YouTube videos with poor performance.
 For EACH video, generate:
 - SEO optimized title (max 70 chars)
 - SEO optimized description (max 500 chars)
-- 5-10 relevant tags
+- 10 relevant tags
 
 Rules:
 - Do NOT change videoId
