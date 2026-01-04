@@ -38,7 +38,7 @@ router.get("/getData", authMiddleware, async (req: any, res) => {
 
 router.put("/update/:id", async (req, res) => {
   try {
-    const { title, description, tags, refreshToken } = req.body;
+    const { title, description, tags,categoryId, refreshToken } = req.body;
     const videoId = req.params.id;
 
     if (!refreshToken) return res.status(400).json({ message: "Missing refreshToken" });
@@ -57,7 +57,7 @@ router.put("/update/:id", async (req, res) => {
           title,
           description,
           tags,
-          categoryId: "22",
+          categoryId
         },
       },
     });

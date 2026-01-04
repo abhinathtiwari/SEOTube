@@ -50,6 +50,7 @@ export async function runSeoCron() {
             title: v.title,
             description: v.description,
             tags: v.tags,
+            categoryId:v.categoryId,
             refreshToken: user.youtubeRefreshToken,
           }
         );
