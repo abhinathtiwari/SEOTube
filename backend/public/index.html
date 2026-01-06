@@ -20,7 +20,7 @@
 
       if (!email || !password) return alert("Enter email & password");
 
-      const res = await fetch("http://localhost:3000/auth/user/signup", {
+      const res = await fetch(process.env.BACKEND_BASE + "/auth/user/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -38,7 +38,7 @@
 
       if (!email || !password) return alert("Enter email & password");
 
-      const res = await fetch("http://localhost:3000/auth/user/login", {
+      const res = await fetch(process.env.BACKEND_BASE+"/auth/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -51,7 +51,7 @@
     }
 
     function connectYoutube() {
-      window.location.href = "http://localhost:3000/auth/youtube";
+      window.location.href = process.env.BACKEND_BASE + "/auth/youtube";
     }
   </script>
 </body>

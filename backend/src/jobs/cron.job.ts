@@ -15,7 +15,7 @@ export async function runSeoCron() {
       // Get analytics
       console.log(user.email);
       const analyticsRes = await axios.post(
-        "http://localhost:3000/youtubecron/analytics",
+        process.env.BACKEND_BASE + "/youtubecron/analytics",
         { refreshToken: user.youtubeRefreshToken }
       );
 
@@ -33,7 +33,7 @@ export async function runSeoCron() {
 
       // Call AI
       const aiRes = await axios.post(
-        "http://localhost:3000/ai/run",
+        process.env.BACKEND_BASE + "/ai/run",
         { prompt }
       );
 
@@ -45,7 +45,7 @@ export async function runSeoCron() {
       // Update videos
       for (const v of updates) {
         await axios.put(
-          `http://localhost:3000/youtube/update/${v.videoId}`,
+          process.env.BACKEND_BASE! + `/youtube/update/${v.videoId}`,
           {
             title: v.title,
             description: v.description,
