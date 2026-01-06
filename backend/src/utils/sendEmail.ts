@@ -39,7 +39,7 @@ export const sendSuccessEmail = async (email: string) => {
             <div class="hero">
               <p>Good news — we've finished optimizing your YouTube videos. We've applied SEO improvements so your content has a better chance to reach the right viewers.</p>
               <p>This process runs automatically and will continue to improve your channel over time.</p>
-              <a class="btn" href="http://localhost:5173/">Open SEOTube</a>
+              <a class="btn" href= ${process.env.FRONTEND_BASE!} >Open SEOTube</a>
             </div>
 
             <p class="footer">Thank you for using SEOTube — the team that helps your videos get discovered. If you have any questions, reply to this email and we'll be happy to help.</p>
