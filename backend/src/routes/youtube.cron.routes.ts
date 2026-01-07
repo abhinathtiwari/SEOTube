@@ -7,9 +7,6 @@ const router = Router();
 router.post("/analytics", async (req: any, res) => {
   try {
     let refreshToken: string | undefined;
-    if (req.user?.youtubeRefreshToken) {
-       refreshToken = req.user.youtubeRefreshToken;
-    }
 
     if (!refreshToken && req.body?.refreshToken) {
       refreshToken = req.body.refreshToken;
