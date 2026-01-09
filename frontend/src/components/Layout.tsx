@@ -21,6 +21,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <nav>
           {location.pathname !== "/" && (
+           <button onClick={()=>navigate("/settings")} className="btn btn-ghost">
+            ⚙️
+          </button>
+          )}
+          {location.pathname !== "/" && (
             <button onClick={handleLogout} className="btn btn-ghost">
               Logout
             </button>
