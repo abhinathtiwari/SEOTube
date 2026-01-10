@@ -19,7 +19,7 @@ export async function runSeoCron() {
         { refreshToken: user.youtubeRefreshToken }
       );
 
-      const videos = analyticsRes.data.leastPerforming;
+      const videos = analyticsRes.data.leastPerformingVideosMetaData;
       if (!videos.length) continue;
 
       console.log("here are the videos : ");
@@ -37,13 +37,13 @@ export async function runSeoCron() {
         { prompt }
       );
 
-      const updates = aiRes.data.output;
+      const aiUpdates = aiRes.data.output;
 
-      console.log("here is the update data list");
-      console.log(updates);
+      console.log("here is the response from AI");
+      console.log(aiUpdates);
 
       // Update videos
-      for (const v of updates) {
+      for (const v of aiUpdates) {
         await axios.put(
           process.env.BACKEND_BASE! + `/youtube/update/${v.videoId}`,
           {
@@ -57,7 +57,7 @@ export async function runSeoCron() {
       }
 
       // Email notification
-      await sendSuccessEmail(user.email);
+      await sendSuccessEmail(user.email,videos,aiUpdates );
 
     } catch (err) {
       console.error(`Cron failed for user ${user._id}`, err);
