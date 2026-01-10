@@ -148,6 +148,22 @@ h1,h2,h3,h4{margin:0;color:var(--text)}
 
 .video-item .video-content{ text-align:left }
 
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
 @media (max-width:640px){
   .auth-card{width:92%;padding:16px}
   .channel-row{flex-direction:column;align-items:flex-start}

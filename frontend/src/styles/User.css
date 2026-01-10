@@ -1,0 +1,132 @@
+.user-profile-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.profile-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, #fff, #9aa4b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.profile-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-card {
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.glass-morph {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.card-section label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 0;
+}
+
+.value {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0;
+}
+
+.value.link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.value.link:hover {
+    text-decoration: underline;
+}
+
+.value.highlight {
+    color: var(--success);
+}
+
+.danger-zone {
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.03);
+    padding: 20px;
+}
+
+.danger-zone h3 {
+    color: #ef4444;
+    margin-bottom: 4px;
+    font-size: 1.1rem;
+}
+
+.danger-zone .muted {
+    font-size: 0.85rem;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    border: none;
+    margin-top: 12px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.loading-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 1rem;
+}
+
+@media (max-width: 640px) {
+    .card-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}

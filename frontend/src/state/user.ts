@@ -14,3 +14,8 @@ export const customUrlState = atom<string>({
   key: "customUrlState",
   default: "",
 });
+
+export const lastOptimizedAtState = atom<string | null>({
+  key: "lastOptimizedAtState",
+  default: null,
+});
