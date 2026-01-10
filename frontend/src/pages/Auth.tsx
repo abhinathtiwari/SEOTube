@@ -14,13 +14,6 @@ const MESSAGES = [
   "The ultimate tool for YouTube growth"
 ];
 
-const VIDEOS = [
-  "/clips/4498132-uhd_3840_2160_25fps.mp4",
-  "/clips/4911932-uhd_3840_2160_24fps.mp4",
-  "/clips/4994326-uhd_3840_2160_25fps.mp4",
-  "/clips/6952860-uhd_4096_2160_25fps.mp4"
-];
-
 export default function Auth() {
   const navigate = useNavigate();
   const setEmailState = useSetRecoilState(userEmailState);
@@ -78,9 +71,7 @@ export default function Auth() {
     <div className="auth-page-container">
       {/* Video Section (60%) */}
       <div className="auth-video-section">
-        {VIDEOS.map((src, idx) => (
-          <video key={idx} src={src} autoPlay loop muted playsInline />
-        ))}
+        <img src="/clips/video comp.gif" alt="SEO optimization in action" />
         <div className="video-overlay">
           <div className="message-container">
             <h1 key={messageIndex} className="rotating-message">
