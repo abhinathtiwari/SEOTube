@@ -10,14 +10,31 @@ router.get("/me", authMiddleware, async (req: any, res) => {
         const user = req.user;
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        const formattedDate = user.lastOptimizedAt
-            ? new Date(user.lastOptimizedAt).toLocaleDateString("en-GB").replace(/\//g, "-")
-            : null;
+        const formatDate = (date: Date | null) => {
+            if (!date) return null;
+            const d = String(date.getDate()).padStart(2, "0");
+            const m = String(date.getMonth() + 1).padStart(2, "0");
+            const y = String(date.getFullYear()).slice(-2);
+            return `${d}-${m}-${y}`;
+        };
+
+        const formattedDate = formatDate(user.lastOptimizedAt);
+
+        const cronTime = process.env.CRON_TIME || "0 0 */15 * *";
+        const intervalMatch = cronTime.match(/\*\/(\d+)/);
+        const intervalDays = intervalMatch ? parseInt(intervalMatch[1]) : 15;
+
+        const baseDate = user.lastOptimizedAt ? new Date(user.lastOptimizedAt) : new Date();
+        const upcomingDate = new Date(baseDate);
+        upcomingDate.setDate(baseDate.getDate() + intervalDays);
+
+        const upcomingOptimization = formatDate(upcomingDate);
 
         res.json({
             email: user.email,
             channelId: user.channelId,
             lastOptimizedAt: formattedDate,
+            upcomingOptimization
         });
     } catch (err: any) {
         console.error(err);

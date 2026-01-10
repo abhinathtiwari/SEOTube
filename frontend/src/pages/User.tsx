@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { channelNameState, customUrlState, userEmailState, lastOptimizedAtState } from "../state/user";
+import { channelNameState, customUrlState, userEmailState, lastOptimizedAtState, upcomingOptimizationState } from "../state/user";
 import Card from "../components/Card";
 import "../styles/User.css";
 
@@ -13,6 +13,7 @@ export default function User() {
   const [channelName, setChannelName] = useRecoilState(channelNameState);
   const [customUrl, setCustomUrl] = useRecoilState(customUrlState);
   const [lastOptimizedAt, setLastOptimizedAt] = useRecoilState(lastOptimizedAtState);
+  const [upcomingOptimization, setUpcomingOptimization] = useRecoilState(upcomingOptimizationState);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function User() {
           if (userRes.data) {
             setEmail(userRes.data.email);
             setLastOptimizedAt(userRes.data.lastOptimizedAt);
+            setUpcomingOptimization(userRes.data.upcomingOptimization);
           }
           if (channelRes.data) {
             setChannelName(channelRes.data.channelName);
@@ -42,7 +44,7 @@ export default function User() {
     };
 
     fetchData();
-  }, [email, channelName, lastOptimizedAt, setEmail, setChannelName, setCustomUrl, setLastOptimizedAt]);
+  }, [email, channelName, lastOptimizedAt, setEmail, setChannelName, setCustomUrl, setLastOptimizedAt, setUpcomingOptimization]);
 
   async function deleteAccount() {
     if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
@@ -95,6 +97,12 @@ export default function User() {
                 <label>Last Optimized At</label>
                 <p className="value highlight">
                   {lastOptimizedAt ? lastOptimizedAt : "Not Yet Updated"}
+                </p>
+              </div>
+              <div className="card-section">
+                <label>Upcoming Optimization</label>
+                <p className="value">
+                  {upcomingOptimization || "Calculating..."}
                 </p>
               </div>
             </Card>
