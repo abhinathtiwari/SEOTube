@@ -29,6 +29,7 @@ export default function Auth() {
   const [isSignup, setIsSignup] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // if token cookie exists, go to home
@@ -44,9 +45,20 @@ export default function Auth() {
     return () => clearInterval(interval);
   }, []);
 
+  const validatePassword = (pass: string) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&]).{6,}$/;
+    return regex.test(pass);
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (isSignup && !validatePassword(password)) {
+      setError("Password must be at least 6 characters, with one uppercase, one lowercase, one number, and one special character.");
+      return;
+    }
+
     const url = isSignup ? "/auth/user/signup" : "/auth/user/login";
     try {
       await api.post(url, { email, password });
@@ -118,14 +130,26 @@ export default function Auth() {
               <div className="auth-input-wrapper">
                 <input
                   id="password"
-                  type="password"
-                  className="auth-input"
+                  type={showPassword ? "text" : "password"}
+                  className="auth-input has-icon"
                   placeholder="••••••••"
                   value={password}
                   required
                   onChange={e => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "👁️" : "🙈"}
+                </button>
               </div>
+              {isSignup && (
+                <p style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: 6 }}>
+                  Min 6 chars: 1 Upper, 1 Lower, 1 Number, 1 Special
+                </p>
+              )}
             </div>
 
             <button type="submit" className="auth-submit-btn">

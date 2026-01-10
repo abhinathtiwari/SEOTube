@@ -150,6 +150,31 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.auth-input.has-icon {
+    padding-right: 44px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    font-size: 1.1rem;
+}
+
+.password-toggle:hover {
+    color: #fff;
+}
+
 .auth-input:focus {
     outline: none;
     border-color: var(--accent);
