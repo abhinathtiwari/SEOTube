@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../api";
 import Layout from "../components/Layout";
 import Card from "../components/Card";
+import { useSetRecoilState } from "recoil";
+import { channelNameState, customUrlState } from "../state/user";
 
 type ChannelData = {
   channelName: string;
@@ -30,15 +32,23 @@ export default function Home() {
   const trimText = (text: string, max = 140) =>
   text.length > max ? text.slice(0, max) + "…" : text;
 
+  const setChannelName = useSetRecoilState(channelNameState);
+  const setCustomUrl = useSetRecoilState(customUrlState);
+
   useEffect(() => {
     api
       .post("/youtube/analytics")
       .then(res => {
         setVideos(res.data.leastPerforming);
         setChannelData(res.data.channelData);
+        if (res.data.channelData) {
+          setChannelName(res.data.channelData.channelName || "");
+          // store customUrl when provided by backend
+          if (res.data.channelData.customUrl) setCustomUrl(res.data.channelData.customUrl);
+        }
       })
       .catch(err => console.error(err));
-  }, []);
+  }, [setCustomUrl, setChannelName]);
 
   return (
     <Layout>

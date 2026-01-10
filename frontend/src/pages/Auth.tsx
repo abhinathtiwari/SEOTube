@@ -4,9 +4,12 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Layout from "../components/Layout";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userEmailState } from "../state/user";
 
 export default function Auth() {
   const navigate = useNavigate();
+  const setEmailState = useSetRecoilState(userEmailState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignup, setIsSignup] = useState(false);
@@ -22,8 +25,12 @@ export default function Auth() {
     const url = isSignup ? "/auth/user/signup" : "/auth/user/login";
     try {
       await api.post(url, { email, password });
-      if (isSignup) window.location.href = "http://localhost:3000/auth/youtube";
-      else window.location.href = "/home";
+      if (isSignup) {
+        window.location.href = "http://localhost:3000/auth/youtube";
+      } else {
+        setEmailState(email);
+        navigate("/home");
+      }
     } catch (err) {
       console.error(err);
     }

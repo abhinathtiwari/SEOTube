@@ -1,11 +1,18 @@
 import { useEffect } from "react";
 import Layout from "../components/Layout";
 import api from "../api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { channelNameState, customUrlState, userEmailState } from "../state/user";
 
 export default function Settings() {
   const navigate = useNavigate();
+  const email = useRecoilValue(userEmailState);
+  const channelName = useRecoilValue(channelNameState);
+  const customUrl = useRecoilValue(customUrlState);
+
   
+
   async function deleteAccount(){
     try{
       const url = "/auth/user/deleteaccount";
@@ -23,6 +30,9 @@ export default function Settings() {
   return (
     <Layout>
       <h1>Settings</h1>
+      <p>{email || "-"}</p>
+      <p>{channelName || "-"}</p>
+      <p>{customUrl || "-"}</p>
       <button onClick={()=>{deleteAccount()}}>Delete Account</button>
     </Layout>
   );

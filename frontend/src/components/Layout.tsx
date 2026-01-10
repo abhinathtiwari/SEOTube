@@ -16,8 +16,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="app-container">
       <header className="site-header">
         <div className="site-title">
-          <h1>SEOTube</h1>
-          <div className="site-tagline muted">Let AI handle your underperforming YouTube videos ❤️</div>
+          <h2>
+            SEO<span style={{ color: "red" }}>Tube</span>
+          </h2>
+          {/* <div className="site-tagline muted">Let AI handle your underperforming YouTube videos ❤️</div> */}
         </div>
         <nav>
           {location.pathname !== "/" && (
