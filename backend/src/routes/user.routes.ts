@@ -35,7 +35,8 @@ router.get("/me", authMiddleware, async (req: any, res) => {
             channelId: user.channelId,
             lastOptimizedAt: formattedDate,
             upcomingOptimization,
-            pauseCronUpdate: user.pauseCronUpdate
+            pauseCronUpdate: user.pauseCronUpdate,
+            recentlyUpdated: user.recentlyUpdated || []
         });
     } catch (err: any) {
         console.error(err);
