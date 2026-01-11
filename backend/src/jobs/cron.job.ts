@@ -3,6 +3,8 @@ import { User } from "../models/Users";
 import cron from "node-cron";
 import { sendSuccessEmail } from "../utils/sendEmail";
 import { buildPrompt } from "../utils/prompts";
+import { oauth2Client } from "../config/youtubeAuth";
+import { getChannelData } from "../utils/channelData";
 
 
 export async function runSeoCron() {
@@ -10,7 +12,7 @@ export async function runSeoCron() {
     youtubeRefreshToken: { $exists: true },
     pauseCronUpdate: { $ne: true },
   });
-
+  let channelName:string;
   for (const user of users) {
     try {
       // Get analytics
@@ -25,9 +27,16 @@ export async function runSeoCron() {
 
       console.log("here are the videos : ");
       console.log(videos);
+      
+  
+      oauth2Client.setCredentials({
+        refresh_token: user.youtubeRefreshToken,
+      });
+      const channelData = await getChannelData(oauth2Client);
+      channelName = channelData.channelName;
 
       // Build prompt
-      const prompt = buildPrompt(videos);
+      const prompt = buildPrompt(videos, channelName);
 
       console.log("here is the prompt : ");
       console.log(prompt);
