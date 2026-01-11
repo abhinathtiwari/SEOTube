@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../utils/middlewares";
 import { oauth2Client } from "../config/youtubeAuth";
 import { getChannelData } from "../utils/channelData";
+import { CronExpressionParser } from "cron-parser";
 
 const router = Router();
 
@@ -20,15 +21,17 @@ router.get("/me", authMiddleware, async (req: any, res) => {
 
         const formattedDate = formatDate(user.lastOptimizedAt);
 
-        const cronTime = process.env.CRON_TIME || "0 0 */15 * *";
-        const intervalMatch = cronTime.match(/\*\/(\d+)/);
-        const intervalDays = intervalMatch ? parseInt(intervalMatch[1]) : 15;
-
-        const baseDate = user.lastOptimizedAt ? new Date(user.lastOptimizedAt) : new Date();
-        const upcomingDate = new Date(baseDate);
-        upcomingDate.setDate(baseDate.getDate() + intervalDays);
-
-        const upcomingOptimization = formatDate(upcomingDate);
+        let upcomingOptimization = null;
+        try {
+            const cronTime = process.env.CRON_TIME || "0 0 */15 * *";
+            console.log("Processing CRON_TIME:", cronTime);
+            const interval = CronExpressionParser.parse(cronTime);
+            const nextDate = interval.next().toDate();
+            console.log("Calculated next date:", nextDate);
+            upcomingOptimization = formatDate(nextDate);
+        } catch (err) {
+            console.error("Cron parse error:", err);
+        }
 
         res.json({
             email: user.email,

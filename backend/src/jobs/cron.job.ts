@@ -27,8 +27,8 @@ export async function runSeoCron() {
 
       console.log("here are the videos : ");
       console.log(videos);
-      
-  
+
+
       oauth2Client.setCredentials({
         refresh_token: user.youtubeRefreshToken,
       });
@@ -65,6 +65,10 @@ export async function runSeoCron() {
           }
         );
       }
+
+      // Update last optimized date
+      user.lastOptimizedAt = new Date();
+      await user.save();
 
       // Email notification
       await sendSuccessEmail(user.email, videos, aiUpdates);
