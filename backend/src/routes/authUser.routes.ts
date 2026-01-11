@@ -21,9 +21,9 @@ router.post("/signup", async (req, res) => {
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
   res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "lax",   
-    secure: false      
+    httpOnly: false,
+    sameSite: "lax",
+    secure: false
   });
   res.json({ message: "Signup successful" });
 });
@@ -44,11 +44,11 @@ router.post("/login", async (req, res) => {
   }
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
-    res.cookie("token", token, {
-    httpOnly: true,
-    sameSite: "lax",   
-    secure: false      
-    });
+  res.cookie("token", token, {
+    httpOnly: false,
+    sameSite: "lax",
+    secure: false
+  });
   res.json({ message: "Login successful" });
 });
 

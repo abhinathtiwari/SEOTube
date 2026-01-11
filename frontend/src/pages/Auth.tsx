@@ -25,13 +25,6 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // if token cookie exists, go to home
-    if (document.cookie.split(";").some(c => c.trim().startsWith("token="))) {
-      navigate("/home");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % MESSAGES.length);
     }, 4000);
