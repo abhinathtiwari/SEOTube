@@ -34,7 +34,8 @@ router.get("/me", authMiddleware, async (req: any, res) => {
             email: user.email,
             channelId: user.channelId,
             lastOptimizedAt: formattedDate,
-            upcomingOptimization
+            upcomingOptimization,
+            pauseCronUpdate: user.pauseCronUpdate
         });
     } catch (err: any) {
         console.error(err);
@@ -56,6 +57,18 @@ router.get("/channel", authMiddleware, async (req: any, res) => {
     } catch (err: any) {
         console.error(err);
         res.status(500).json({ message: "Failed to fetch channel data", error: err.message });
+    }
+});
+
+router.post("/toggle-updates", authMiddleware, async (req: any, res) => {
+    try {
+        const user = req.user;
+        user.pauseCronUpdate = !user.pauseCronUpdate;
+        await user.save();
+        res.json({ pauseCronUpdate: user.pauseCronUpdate });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to toggle updates", error: err.message });
     }
 });
 

@@ -24,3 +24,8 @@ export const upcomingOptimizationState = atom<string | null>({
   key: "upcomingOptimizationState",
   default: null,
 });
+
+export const pauseCronUpdateState = atom<boolean>({
+  key: "pauseCronUpdateState",
+  default: false,
+});

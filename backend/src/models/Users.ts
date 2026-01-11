@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   youtubeRefreshToken: { type: String },
   channelId: { type: String },
   lastOptimizedAt: { type: Date, default: null },
+  pauseCronUpdate: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

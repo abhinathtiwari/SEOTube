@@ -8,6 +8,7 @@ import { buildPrompt } from "../utils/prompts";
 export async function runSeoCron() {
   const users = await User.find({
     youtubeRefreshToken: { $exists: true },
+    pauseCronUpdate: { $ne: true },
   });
 
   for (const user of users) {
@@ -50,14 +51,14 @@ export async function runSeoCron() {
             title: v.title,
             description: v.description,
             tags: v.tags,
-            categoryId:v.categoryId,
+            categoryId: v.categoryId,
             refreshToken: user.youtubeRefreshToken,
           }
         );
       }
 
       // Email notification
-      await sendSuccessEmail(user.email,videos,aiUpdates );
+      await sendSuccessEmail(user.email, videos, aiUpdates);
 
     } catch (err) {
       console.error(`Cron failed for user ${user._id}`, err);
