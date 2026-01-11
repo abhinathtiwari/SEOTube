@@ -77,10 +77,6 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
        refreshToken = req.user.youtubeRefreshToken;
     }
 
-    if (!refreshToken && req.body?.refreshToken) {
-      refreshToken = req.body.refreshToken;
-    }
-
     if (!refreshToken) {
       return res.status(401).json({ message: "No auth source found" });
     }
