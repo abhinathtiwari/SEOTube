@@ -3,12 +3,14 @@ import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
 import { authMiddleware } from "../utils/middlewares";
 import { getChannelData } from "../utils/channelData";
+import axios from "axios";
+import { buildPrompt } from "../utils/prompts";
 
 const router = Router();
 
 router.get("/getData", authMiddleware, async (req: any, res) => {
   try {
-    const user = req.user; 
+    const user = req.user;
     if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
 
     oauth2Client.setCredentials({
@@ -38,12 +40,12 @@ router.get("/getData", authMiddleware, async (req: any, res) => {
 
 router.put("/update/:id", async (req, res) => {
   try {
-    const { title, description, tags,categoryId, refreshToken } = req.body;
+    const { title, description, tags, categoryId, refreshToken } = req.body;
     const videoId = req.params.id;
 
     if (!refreshToken) return res.status(400).json({ message: "Missing refreshToken" });
 
-    oauth2Client.setCredentials({ 
+    oauth2Client.setCredentials({
       refresh_token: refreshToken,
     });
 
@@ -70,15 +72,11 @@ router.put("/update/:id", async (req, res) => {
 });
 
 
-router.post("/analytics",authMiddleware, async (req: any, res) => {
+router.post("/analytics", authMiddleware, async (req: any, res) => {
   try {
     let refreshToken: string | undefined;
     if (req.user?.youtubeRefreshToken) {
-       refreshToken = req.user.youtubeRefreshToken;
-    }
-
-    if (!refreshToken && req.body?.refreshToken) {
-      refreshToken = req.body.refreshToken;
+      refreshToken = req.user.youtubeRefreshToken;
     }
 
     if (!refreshToken) {
@@ -111,10 +109,10 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
     const startDate = start.toISOString().split("T")[0];
     const endDate = end.toISOString().split("T")[0];
 
-        const analytics = google.youtubeAnalytics({ 
-          version: "v2", 
-          auth: oauth2Client,
-        });
+    const analytics = google.youtubeAnalytics({
+      version: "v2",
+      auth: oauth2Client,
+    });
 
     const response = await analytics.reports.query({
       ids: "channel==MINE",
@@ -122,7 +120,7 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
       endDate,
       dimensions: "video",
       metrics: "views,averageViewDuration",
-       sort: "-views",
+      sort: "-views",
       maxResults: 100,
     });
 
@@ -161,10 +159,10 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
         };
       });
 
-    res.json({ 
+    res.json({
       channelData,
       leastPerforming
-     });
+    });
 
   } catch (error: any) {
     console.error("YouTube Analytics Error:", error?.response?.data || error);
@@ -175,5 +173,111 @@ router.post("/analytics",authMiddleware, async (req: any, res) => {
   }
 });
 
+router.get("/recent-videos", authMiddleware, async (req: any, res) => {
+  try {
+    const user = req.user;
+    if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
+
+    oauth2Client.setCredentials({
+      refresh_token: user.youtubeRefreshToken,
+    });
+
+    const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+    const { pageToken } = req.query;
+
+    const response = await youtube.search.list({
+      part: ["snippet", "id"],
+      forMine: true,
+      type: ["video"],
+      order: "date",
+      maxResults: 10,
+      pageToken: pageToken as string,
+    });
+
+    const videos = response.data.items?.map(item => ({
+      videoId: item.id?.videoId,
+      title: item.snippet?.title,
+      description: item.snippet?.description,
+      thumbnail: item.snippet?.thumbnails?.high?.url || item.snippet?.thumbnails?.medium?.url,
+      publishedAt: item.snippet?.publishedAt,
+    })) || [];
+
+    res.json({
+      videos,
+      nextPageToken: response.data.nextPageToken,
+      prevPageToken: response.data.prevPageToken,
+    });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch recent videos", error: err.message });
+  }
+});
+
+router.post("/optimize/:id", authMiddleware, async (req: any, res) => {
+  try {
+    const user = req.user;
+    const { id: videoId } = req.params;
+
+    if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
+    if (user.recentlyUpdated?.includes(videoId)) {
+      return res.status(400).json({ message: "Video already optimized recently" });
+    }
+
+    oauth2Client.setCredentials({
+      refresh_token: user.youtubeRefreshToken,
+    });
+
+    const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+    const channelData = await getChannelData(oauth2Client);
+
+    // Get specific video details
+    const videoRes = await youtube.videos.list({
+      part: ["snippet"],
+      id: [videoId],
+    });
+
+    const videoData = videoRes.data.items?.[0];
+    if (!videoData) return res.status(404).json({ message: "Video not found" });
+
+    const videoToOptimize = {
+      videoId,
+      title: videoData.snippet?.title,
+      description: videoData.snippet?.description,
+      tags: videoData.snippet?.tags || [],
+    };
+
+    const prompt = buildPrompt([videoToOptimize], channelData.channelName);
+
+    const aiRes = await axios.post(
+      process.env.BACKEND_BASE + "/ai/run",
+      { prompt }
+    );
+
+    const aiUpdate = aiRes.data.output?.[0];
+    if (!aiUpdate) throw new Error("AI failed to generate update");
+
+    // Update video on YouTube
+    await axios.put(
+      process.env.BACKEND_BASE! + `/youtube/update/${videoId}`,
+      {
+        title: aiUpdate.title,
+        description: aiUpdate.description,
+        tags: aiUpdate.tags,
+        categoryId: aiUpdate.categoryId,
+        refreshToken: user.youtubeRefreshToken,
+      }
+    );
+
+    // Update user in DB
+    if (!user.recentlyUpdated) user.recentlyUpdated = [];
+    user.recentlyUpdated.push(videoId);
+    await user.save();
+
+    res.json({ success: true, optimizedData: aiUpdate });
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: "Optimization failed", error: err.message });
+  }
+});
 
 export default router;

@@ -7,9 +7,6 @@ const router = Router();
 router.post("/analytics", async (req: any, res) => {
   try {
     let refreshToken: string | undefined;
-    if (req.user?.youtubeRefreshToken) {
-       refreshToken = req.user.youtubeRefreshToken;
-    }
 
     if (!refreshToken && req.body?.refreshToken) {
       refreshToken = req.body.refreshToken;
@@ -32,7 +29,7 @@ router.post("/analytics", async (req: any, res) => {
     });
 
     const videoIds = videosResponse.data.items?.map(v => v.id?.videoId) || [];
-    if (videoIds.length === 0) return res.json({ leastPerforming: [] });
+    if (videoIds.length === 0) return res.json({ leastPerformingVideosMetaData: [] });
 
     const end = new Date();
     end.setMonth(end.getMonth() - 1);
@@ -43,10 +40,10 @@ router.post("/analytics", async (req: any, res) => {
     const startDate = start.toISOString().split("T")[0];
     const endDate = end.toISOString().split("T")[0];
 
-        const analytics = google.youtubeAnalytics({ 
-          version: "v2", 
-          auth: oauth2Client,
-        });
+    const analytics = google.youtubeAnalytics({
+      version: "v2",
+      auth: oauth2Client,
+    });
 
     const response = await analytics.reports.query({
       ids: "channel==MINE",
@@ -54,7 +51,7 @@ router.post("/analytics", async (req: any, res) => {
       endDate,
       dimensions: "video",
       metrics: "views,averageViewDuration",
-       sort: "-views",
+      sort: "-views",
       maxResults: 100,
     });
 
@@ -66,22 +63,30 @@ router.post("/analytics", async (req: any, res) => {
       averageViewDurationSeconds: Number(row[2]),
     }));
 
-    const leastPerforming = videos
+    const leastPerformingVideos = videos
       .sort((a, b) => a.views - b.views)
-      .slice(0, parseInt(process.env.NUMBER_OF_VIDEOS!))
-      .map(v => {
-        const vid = videosResponse.data.items?.find(x => x.id?.videoId === v.videoId);
-        return {
-          videoId: v.videoId,
-          title: vid?.snippet?.title || "",
-          views: v.views,
-          averageViewDurationSeconds: v.averageViewDurationSeconds,
-        };
-      });
+      .slice(0, parseInt(process.env.NUMBER_OF_VIDEOS!));
 
-    res.json({ 
-      leastPerforming
-     });
+    const leastPerformingIds = leastPerformingVideos.map(v => v.videoId);
+
+    if (leastPerformingIds.length === 0) return res.json({ leastPerformingVideosMetaData: [] });
+
+    // Fetch full video details for the least performing videos
+    const detailsResponse = await youtube.videos.list({
+      part: ["snippet"],
+      id: leastPerformingIds,
+    });
+
+    const leastPerformingVideosMetaData = detailsResponse.data.items?.map(vid => ({
+      videoId: vid.id,
+      title: vid.snippet?.title || "",
+      description: vid.snippet?.description || "",
+      tags: vid.snippet?.tags || [],
+    })) || [];
+
+    res.json({
+      leastPerformingVideosMetaData
+    });
 
   } catch (error: any) {
     console.error("YouTube Analytics Error:", error?.response?.data || error);

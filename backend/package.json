@@ -16,6 +16,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cron-parser": "^5.4.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "googleapis": "^169.0.0",

@@ -16,14 +16,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="app-container">
       <header className="site-header">
         <div className="site-title">
-          <h1>SEOTube</h1>
-          <div className="site-tagline muted">Let AI handle your underperforming YouTube videos ❤️</div>
+          <h2>
+            SEO<span style={{ color: "red" }}>Tube</span>
+          </h2>
+          {/* <div className="site-tagline muted">Let AI handle your underperforming YouTube videos ❤️</div> */}
         </div>
-        <nav>
+        <nav style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {location.pathname !== "/" && (
-            <button onClick={handleLogout} className="btn btn-ghost">
-              Logout
-            </button>
+            <>
+              <button onClick={()=>navigate("/home")} className={`btn btn-ghost ${location.pathname === '/home' ? 'active' : ''}`}>
+                Dashboard
+              </button>
+              <button onClick={()=>navigate("/recent")} className={`btn btn-ghost ${location.pathname === '/recent' ? 'active' : ''}`}>
+                Videos
+              </button>
+              <button onClick={()=>navigate("/user")} className={`btn btn-ghost ${location.pathname === '/user' ? 'active' : ''}`}>
+                👤
+              </button>
+              <button onClick={handleLogout} className="btn btn-ghost">
+                Logout
+              </button>
+            </>
           )}
         </nav>
       </header>

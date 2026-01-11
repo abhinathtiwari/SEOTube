@@ -1,0 +1,163 @@
+.user-profile-container {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 16px;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.profile-header h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+    background: linear-gradient(90deg, #fff, #9aa4b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: stretch;
+    /* Stretch to match height */
+}
+
+.profile-left {
+    display: flex;
+}
+
+.profile-left .profile-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profile-card {
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.glass-morph {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.card-section label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 0;
+}
+
+.value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0;
+}
+
+.value.link {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.value.link:hover {
+    text-decoration: underline;
+}
+
+.value.highlight {
+    color: var(--success);
+}
+
+.danger-zone {
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.03);
+    padding: 12px;
+}
+
+.danger-zone h3 {
+    color: #ef4444;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.danger-zone .muted {
+    font-size: 0.75rem;
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    margin-top: 5px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-danger:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.loading-state {
+    text-align: center;
+    padding: 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 850px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user-profile-container {
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 640px) {
+    .card-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+}
