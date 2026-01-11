@@ -33,6 +33,8 @@ export default function Home() {
   const setChannelName = useSetRecoilState(channelNameState);
   const setCustomUrl = useSetRecoilState(customUrlState);
 
+const [growthData, setGrowthData] = useState<any>(null);
+
   useEffect(() => {
     // Fetch analytics and channel data
     api
@@ -53,7 +55,53 @@ export default function Home() {
         setUpcomingOpt(res.data.upcomingOptimization);
       })
       .catch(err => console.error(err));
+
+    // Fetch Growth Analysis
+    api.get("/youtube/growth-analysis")
+      .then(res => {
+        setGrowthData(res.data);
+      })
+      .catch(err => console.error(err));
   }, [setCustomUrl, setChannelName]);
+
+  const calculateConsistency = (recentVideos: any[]) => {
+    if (!recentVideos || recentVideos.length < 2) return { score: 100, isConsistent: true };
+    
+    const dates = recentVideos.map(v => new Date(v.publishedAt).getTime());
+    let totalDiff = 0;
+    for (let i = 0; i < dates.length - 1; i++) {
+        totalDiff += Math.abs(dates[i] - dates[i+1]);
+    }
+    const avgDiffDays = totalDiff / (dates.length - 1) / (1000 * 60 * 60 * 24);
+    
+    return {
+        score: Math.max(0, 100 - avgDiffDays * 5),
+        isConsistent: avgDiffDays <= 10
+    };
+  };
+
+  const getHistogramData = (recentVideos: any[]) => {
+    if (!recentVideos || recentVideos.length < 2) return [];
+    
+    const data = [];
+    // Sorting by date (Oldest to Newest)
+    const sorted = [...recentVideos].sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime());
+    
+    for (let i = 1; i < sorted.length; i++) {
+        const curr = new Date(sorted[i].publishedAt).getTime();
+        const prev = new Date(sorted[i-1].publishedAt).getTime();
+        const gapDays = Math.ceil(Math.abs(curr - prev) / (1000 * 60 * 60 * 24));
+        data.push({
+            date: new Date(sorted[i].publishedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }),
+            gap: gapDays,
+            title: sorted[i].title
+        });
+    }
+    return data;
+  };
+
+  const histogramData = growthData ? getHistogramData(growthData.recentVideos) : [];
+  const consistency = growthData ? calculateConsistency(growthData.recentVideos) : null;
 
   return (
     <Layout>
@@ -121,17 +169,77 @@ export default function Home() {
         {/* Right Side: Sidebar for New Features */}
         <div className="home-right">
            <Card className="glass-morph" style={{ padding: '20px' }}>
-              <h4 style={{ marginBottom: '12px', fontSize: '1rem' }}>Growth Insights</h4>
-              <p className="muted" style={{ fontSize: '0.85rem', lineHeight: '1.6' }}>
-                Your channel performance is currently being monitored. New AI-driven insights will appear here soon.
-              </p>
+              <h4 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '20px' }}>
+                📅 Upload Consistency
+              </h4>
+              
+              <div className="histogram-wrapper">
+                <div className="histogram-chart">
+                    {histogramData.map((item, idx) => (
+                        <div key={idx} className="histogram-bar-container">
+                            <div 
+                                className="histogram-bar" 
+                                style={{ 
+                                    height: `${Math.min(100, (item.gap / 20) * 100)}%`,
+                                    background: item.gap <= 10 ? 'var(--success)' : '#ef4444'
+                                }}
+                            >
+                                <div className="histogram-tooltip">
+                                    <div className="tooltip-gap">{item.gap} day gap</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {histogramData.length === 0 && <div className="muted" style={{ fontSize: '0.8rem', width: '100%', textAlign: 'center' }}>Not enough data</div>}
+                </div>
+                <div className="histogram-axis">
+                    {histogramData.map((item, idx) => (
+                        <span key={idx} className="axis-label">{item.date}</span>
+                    ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px', fontSize: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
+                    <span className="muted">Upload Health</span>
+                    <span style={{ color: consistency?.isConsistent ? 'var(--success)' : '#ef4444', fontWeight: 700 }}>
+                        {consistency?.isConsistent ? 'CONSISTENT' : 'INCONSISTENT'}
+                    </span>
+              </div>
            </Card>
+
+           {growthData && (
+             <>
+               <Card className="glass-morph" style={{ padding: '20px' }}>
+                  <h4 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '10px' }}>
+                    🤖 AI Marketing Advice
+                  </h4>
+                  <p style={{ fontSize: '0.85rem', lineHeight: '1.5', color: 'var(--text)', fontStyle: 'italic' }}>
+                    "{growthData.marketingAdvice}"
+                  </p>
+               </Card>
+
+               <Card className="glass-morph" style={{ padding: '20px' }}>
+                  <h4 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '12px' }}>
+                    💡 Hot Video Ideas
+                  </h4>
+                  <ul className="idea-list">
+                    {growthData.videoIdeaList.map((idea: string, idx: number) => (
+                        <li key={idx} className="idea-item">
+                            <span className="idea-bullet">✦</span> {idea}
+                        </li>
+                    ))}
+                  </ul>
+               </Card>
+             </>
+           )}
            
-           <Card className="glass-morph" style={{ padding: '20px', border: '1px dashed rgba(255,255,255,0.1)' }}>
-              <p className="muted" style={{ fontSize: '0.8rem', textAlign: 'center', margin: '20px 0' }}>
-                Space for upcoming features
-              </p>
-           </Card>
+           {!growthData && (
+             <Card className="glass-morph" style={{ padding: '20px', border: '1px dashed rgba(255,255,255,0.1)' }}>
+                <p className="muted" style={{ fontSize: '0.8rem', textAlign: 'center', margin: '20px 0' }}>
+                    Generating growth insights...
+                </p>
+             </Card>
+           )}
         </div>
       </div>
     </Layout>
