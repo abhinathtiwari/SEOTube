@@ -108,9 +108,7 @@ export default function RecentVideos() {
                   <div className="video-info">
                     <h3 className="video-title">{video.title}</h3>
                     <p className="video-desc">
-                      {video.description?.length > 120 
-                        ? video.description.substring(0, 120) + "..." 
-                        : video.description || "No description provided"}
+                      {video.description || "No description provided"}
                     </p>
                     <div className="video-actions">
                       {isOptimized ? (
