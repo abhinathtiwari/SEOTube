@@ -98,3 +98,27 @@ export const sendSuccessEmail = async (email: string, videos: any[], aiUpdates: 
     `,
   });
 };
+
+
+export const sendReminderEmail = async (email: string, ideas: string[]) => {
+    const { Resend } = require("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    try {
+        await resend.emails.send({
+            from: "SEOTube <" + process.env.RESEND_FROM_EMAIL + ">",
+            to: email,
+            subject: "We miss your content! Here are some ideas 💡",
+            html: `
+                <h2>You haven't uploaded in 2 weeks!</h2>
+                <p>Consistent uploading is key to YouTube growth. To help you get back on track, here are some AI-generated video ideas based on your channel:</p>
+                <ul>
+                    ${ideas.map(idea => `<li>${idea}</li>`).join("")}
+                </ul>
+                <p>View more insights on your <a href="${process.env.FRONTEND_BASE}">SEOTube Dashboard</a>.</p>
+            `,
+        });
+    } catch (err) {
+        console.error("Failed to send reminder email:", err);
+    }
+};
