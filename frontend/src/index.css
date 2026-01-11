@@ -149,6 +149,17 @@ h4 {
   background: transparent;
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.2s;
+}
+
+.btn-ghost.active {
+  background: rgba(124, 92, 255, 0.1);
+  color: var(--accent);
+  border-color: rgba(124, 92, 255, 0.2);
+}
+
+.btn-ghost:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .channel-row {

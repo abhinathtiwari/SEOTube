@@ -29,3 +29,8 @@ export const pauseCronUpdateState = atom<boolean>({
   key: "pauseCronUpdateState",
   default: false,
 });
+
+export const recentlyUpdatedState = atom<string[]>({
+  key: "recentlyUpdatedState",
+  default: [],
+});
