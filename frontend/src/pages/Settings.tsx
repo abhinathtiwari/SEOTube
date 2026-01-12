@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+/** Settings page for managing account preferences and automated update toggles. */
 import Layout from "../components/Layout";
 import api from "../api";
 import { useNavigate } from "react-router-dom";

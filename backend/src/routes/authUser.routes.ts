@@ -1,3 +1,4 @@
+/** Express routes handling user authentication and registration logic. */
 import { Router } from "express";
 import { User } from "../models/Users";
 import bcrypt from "bcrypt";

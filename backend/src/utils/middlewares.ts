@@ -1,3 +1,4 @@
+/** Custom Express middlewares for user authentication and authorization. */
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/Users";

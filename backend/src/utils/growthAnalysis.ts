@@ -1,3 +1,4 @@
+/** Utility for tracking upload consistency and generating growth-oriented AI analysis. */
 import { google } from "googleapis";
 import axios from "axios";
 import { User } from "../models/Users";

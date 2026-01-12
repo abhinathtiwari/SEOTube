@@ -1,3 +1,4 @@
+/** Factory for building structured AI prompt templates for video and growth analysis. */
 
 export function buildGrowthPrompt(videos: any[]) {
   return `
