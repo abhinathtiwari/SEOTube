@@ -1,4 +1,3 @@
-/** Application entry point for rendering the React root and global state provider. */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";

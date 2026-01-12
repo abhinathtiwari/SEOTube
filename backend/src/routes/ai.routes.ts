@@ -1,4 +1,3 @@
-/** Express routes for AI-driven text generation and processing. */
 import { Router } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 

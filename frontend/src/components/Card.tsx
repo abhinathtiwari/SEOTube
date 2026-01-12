@@ -1,4 +1,3 @@
-/** Styled container component for wraping content sections with a uniform look. */
 import React from "react";
 
 type Props = {

@@ -1,4 +1,3 @@
-/** Reusable button component with customizable styles and interaction states. */
 import React from "react";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {

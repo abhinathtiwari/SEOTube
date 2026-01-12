@@ -1,4 +1,3 @@
-/** User login and registration page with integrated YouTube auth redirect. */
 import { useState, useEffect } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";

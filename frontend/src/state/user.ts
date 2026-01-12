@@ -1,4 +1,3 @@
-/** Recoil state atoms for managing global synchronization of user and channel metadata. */
 import { atom } from "recoil";
 
 export const userEmailState = atom<string>({

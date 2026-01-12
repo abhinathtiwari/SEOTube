@@ -1,6 +1,5 @@
 import axios from "axios";
 import { User } from "../models/Users";
-/** Background cron task for automated YouTube video SEO optimization. */
 import cron from "node-cron";
 import { sendSuccessEmail } from "../utils/sendEmail";
 import { buildPrompt } from "../utils/prompts";
@@ -13,7 +12,7 @@ export async function runSeoCron() {
     youtubeRefreshToken: { $exists: true },
     pauseCronUpdate: { $ne: true },
   });
-  let channelName: string;
+  let channelName:string;
   for (const user of users) {
     try {
       // Get analytics

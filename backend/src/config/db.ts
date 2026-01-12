@@ -1,4 +1,3 @@
-/** Database connection configuration and initialization. */
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
