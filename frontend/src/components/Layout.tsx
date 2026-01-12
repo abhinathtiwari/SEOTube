@@ -1,4 +1,3 @@
-/** Main application shell providing the header, navigation, and sidebar structure. */
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 

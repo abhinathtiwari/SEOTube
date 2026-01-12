@@ -1,4 +1,3 @@
-/** Utility functions to fetch and process YouTube channel metadata. */
 import { google } from "googleapis";
 
 export const getChannelData = async (oauth2Client: any) => {
@@ -11,7 +10,7 @@ export const getChannelData = async (oauth2Client: any) => {
   });
 
   const snippet = channelResponse.data.items?.[0]?.snippet;
-
+  
   return {
     channelName: snippet?.title || "",
     logo: snippet?.thumbnails?.medium?.url || "",

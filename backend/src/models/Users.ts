@@ -1,4 +1,3 @@
-/** Mongoose schema and model definition for the User entity. */
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
