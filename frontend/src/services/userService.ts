@@ -1,3 +1,4 @@
+/** Data service for abstracting user-related API interactions. */
 import api from "../api";
 
 export const userService = {

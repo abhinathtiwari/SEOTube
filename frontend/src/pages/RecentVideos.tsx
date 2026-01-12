@@ -1,3 +1,4 @@
+/** Management page for viewing and optimizing the most recent channel uploads. */
 import Layout from "../components/Layout";
 import { useRecentVideos } from "../hooks/useRecentVideos";
 import { VideoCard } from "../components/RecentVideos/VideoCard";

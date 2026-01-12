@@ -1,3 +1,4 @@
+/** Interactive video card for the recent uploads page with optimization controls. */
 import React from "react";
 import Card from "../Card";
 

@@ -1,3 +1,4 @@
+/** The main dashboard page displaying channel stats and growth insights. */
 import Layout from "../components/Layout";
 import Card from "../components/Card";
 import { useHomeData } from "../hooks/useHomeData";

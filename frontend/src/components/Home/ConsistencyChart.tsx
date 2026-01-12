@@ -1,3 +1,4 @@
+/** Interactive histogram component for visualizing YouTube upload gaps over time. */
 import React from "react";
 import Card from "../Card";
 

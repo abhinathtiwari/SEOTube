@@ -1,3 +1,4 @@
+/** Optimized video card for the home page statistics grid. */
 import React from "react";
 
 interface Video {

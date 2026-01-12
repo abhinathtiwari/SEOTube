@@ -1,3 +1,4 @@
+/** Logic hook for the home page to orchestrate analytics and growth data fetching. */
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { channelNameState, customUrlState } from "../state/user";

@@ -1,3 +1,4 @@
+/** Data service for abstracting complex YouTube and analytics API operations. */
 import api from "../api";
 
 export const youtubeService = {

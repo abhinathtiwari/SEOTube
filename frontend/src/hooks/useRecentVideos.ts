@@ -1,3 +1,4 @@
+/** Logic hook for managing video listings, pagination, and optimization triggers. */
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { recentlyUpdatedState } from "../state/user";

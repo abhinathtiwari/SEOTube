@@ -1,3 +1,4 @@
+/** UI component to display AI-generated marketing advice and video suggestions. */
 import React from "react";
 import Card from "../Card";
 
