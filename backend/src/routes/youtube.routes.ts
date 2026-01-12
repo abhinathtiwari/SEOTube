@@ -5,6 +5,7 @@ import { authMiddleware } from "../utils/middlewares";
 import { getChannelData } from "../utils/channelData";
 import axios from "axios";
 import { buildPrompt } from "../utils/prompts";
+import { performGrowthAnalysis } from "../utils/growthAnalysis";
 
 const router = Router();
 
@@ -277,6 +278,19 @@ router.post("/optimize/:id", authMiddleware, async (req: any, res) => {
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ message: "Optimization failed", error: err.message });
+  }
+});
+
+router.get("/growth-analysis", authMiddleware, async (req: any, res) => {
+  try {
+    const user = req.user;
+    if (!user.youtubeRefreshToken) return res.status(401).send("YouTube not connected");
+
+    const data = await performGrowthAnalysis(user);
+    res.json(data);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to perform growth analysis" });
   }
 });
 
