@@ -1,3 +1,4 @@
+/** Entry point of the server; initializes database connections and starts listening. */
 import dotenv from "dotenv";
 dotenv.config();
 

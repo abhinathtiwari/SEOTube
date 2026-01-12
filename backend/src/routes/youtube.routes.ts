@@ -1,3 +1,4 @@
+/** Express route definitions for YouTube analytics, listing, and optimization. */
 import { Router } from "express";
 import { authMiddleware } from "../utils/middlewares";
 import * as youtubeController from "../controllers/youtube.controller";

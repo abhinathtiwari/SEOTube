@@ -1,3 +1,4 @@
+/** Weekly cron job to send reminders and AI ideas to inactive creators. */
 import cron from "node-cron";
 import { User } from "../models/Users";
 import { google } from "googleapis";

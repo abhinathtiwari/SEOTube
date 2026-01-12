@@ -1,3 +1,4 @@
+/** YouTube OAuth2 client configuration and shared instance. */
 import { google } from "googleapis";
 
 export const oauth2Client = new google.auth.OAuth2(

@@ -1,3 +1,4 @@
+/** Express routes managing the YouTube OAuth2 authorization flow. */
 import { Router } from "express";
 import { oauth2Client } from "../config/youtubeAuth";
 import { google } from "googleapis";
@@ -36,7 +37,7 @@ router.get("/youtube/callback", authMiddleware, async (req: any, res) => {
   req.user.channelId = channel.id;
   await req.user.save();
 
-  res.redirect(process.env.FRONTEND_BASE!+"/home");
+  res.redirect(process.env.FRONTEND_BASE! + "/home");
 });
 
 export default router;

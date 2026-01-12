@@ -1,3 +1,4 @@
+/** Express route definitions for user-related profile and channel settings. */
 import { Router } from "express";
 import { authMiddleware } from "../utils/middlewares";
 import * as userController from "../controllers/user.controller";

@@ -1,3 +1,4 @@
+/** Controller handling business logic for user profile and preference operations. */
 import { Response } from "express";
 import { catchAsync } from "../utils/catchAsync";
 import { AppError } from "../utils/errorHandler";

@@ -1,3 +1,4 @@
+/** Main Express application setup and middleware configuration. */
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";

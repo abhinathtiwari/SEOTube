@@ -1,3 +1,4 @@
+/** Global error handler middleware and custom error class for standardized responses. */
 import { Request, Response, NextFunction } from "express";
 
 export class AppError extends Error {

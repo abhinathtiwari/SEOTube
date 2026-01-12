@@ -1,3 +1,4 @@
+/** Express routes for managing and triggering the SEO cron job. */
 import { Router } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";

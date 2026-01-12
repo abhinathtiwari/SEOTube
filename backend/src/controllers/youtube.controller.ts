@@ -1,3 +1,4 @@
+/** Controller orchestrating YouTube API interactions, video optimization, and analytics. */
 import { Response } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
