@@ -23,9 +23,9 @@ You are a Senior YouTube SEO Strategist.
 Task: Rewrite the metadata for the provided list of low-performing videos to maximize Click-Through Rate (CTR) and search visibility. Also use ${channelName} intelligently in all metadata.
 
 Optimization Requirements for EACH Video:
-- Title: Front-load the primary keyword. Use power words or numbers to create curiosity. (Max 30 chars). Add channelName "title" | "channelName"
-- Description: Start with a 1 sentence hook containing keywords. Include a brief summary and a clear Call-to-Action (CTA). (Max 100 chars) and with # hashtags related to video.
-- Tags: Provide exactly 4 tags, mixing broad category terms and specific long-tail keywords.
+- Title: Front-load the primary keyword. Use power words or numbers to create curiosity. (Max 70 chars). Add channelName "title" | "channelName"
+- Description: Start with a 4-5 sentences hook containing keywords. Include a brief summary and a clear Call-to-Action (CTA). (Max ${process.env.DESCRIPTION_CHARACTERS_COUNT} chars) and with # hashtags related to video.
+- Tags: Provide exactly 20 tags, mixing broad category terms and specific long-tail keywords.
 - CategoryId: Select the most accurate numerical ID from the standard YouTube Data API v3 list (e.g., 20 for Gaming, 27 for Education).
 - SEO Improvement Score: Provide a score between 1 and 100, indicating the potential improvement in after using new metadata.
 
