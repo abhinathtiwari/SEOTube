@@ -101,6 +101,7 @@ const [growthData, setGrowthData] = useState<any>(null);
   };
 
   const histogramData = growthData ? getHistogramData(growthData.recentVideos) : [];
+  const maxGap = histogramData.length > 0 ? Math.max(...histogramData.map((d: any) => d.gap)) : 100;
   const consistency = growthData ? calculateConsistency(growthData.recentVideos) : null;
 
   return (
@@ -180,7 +181,7 @@ const [growthData, setGrowthData] = useState<any>(null);
                             <div 
                                 className="histogram-bar" 
                                 style={{ 
-                                    height: `${Math.min(100, (item.gap / 20) * 100)}%`,
+                                    height: `${Math.max(5, (item.gap / maxGap) * 100)}%`,
                                     background: item.gap <= 10 ? 'var(--success)' : '#ef4444'
                                 }}
                             >
