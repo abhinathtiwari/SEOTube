@@ -101,21 +101,56 @@ export const sendSuccessEmail = async (email: string, videos: any[], aiUpdates: 
 
 
 export const sendReminderEmail = async (email: string, ideas: string[]) => {
-    const { Resend } = require("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const ideaRows = ideas.map(idea => `
+      <li style="margin-bottom:10px; list-style: none;">
+        <div style="background: linear-gradient(90deg,#0f1724,#071022); border: 1px solid rgba(255,255,255,0.04); padding: 12px 14px; border-radius: 12px; color: #e6eef8;">
+          ${idea}
+        </div>
+      </li>
+    `).join("");
 
     try {
         await resend.emails.send({
-            from: "SEOTube <" + process.env.RESEND_FROM_EMAIL + ">",
-            to: email,
+            from: "SEOTube <onboarding@resend.dev>",
+            to: [email],
             subject: "We miss your content! Here are some ideas 💡",
             html: `
-                <h2>You haven't uploaded in 2 weeks!</h2>
-                <p>Consistent uploading is key to YouTube growth. To help you get back on track, here are some AI-generated video ideas based on your channel:</p>
-                <ul>
-                    ${ideas.map(idea => `<li>${idea}</li>`).join("")}
-                </ul>
-                <p>View more insights on your <a href="${process.env.FRONTEND_BASE}">SEOTube Dashboard</a>.</p>
+      <!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <title>We miss your content!</title>
+        </head>
+        <body style="background: #09090b; color: #e6eef8; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 40px 20px;">
+          <div style="max-width: 650px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 32px;">
+              <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -1px;">SEO<span style="color: #ff0000;">Tube</span></h1>
+              <p style="color: #9aa4b2; font-size: 14px; margin-top: 8px;">AI-Generated Video Ideas to Jumpstart Uploads</p>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #09090b 100%); border: 1px solid rgba(124, 92, 255, 0.12); border-radius: 20px; padding: 28px; margin-bottom: 28px; text-align: center;">
+              <div style="display: inline-block; padding: 6px 12px; background: rgba(124,92,255,0.08); border-radius: 100px; color: #7c5cff; font-size: 12px; font-weight: 800; letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(124,92,255,0.12);">REMINDER</div>
+              <h2 style="font-size: 20px; margin: 8px 0 12px; color: #fff;">You haven't uploaded in ${process.env.REMINDER_THRESHOLD_DAYS || 'a while'} days</h2>
+              <p style="color: #c7d3e2; font-size: 15px; line-height: 1.6; margin: 0 auto; max-width: 520px;">Consistent uploads help your channel grow. Here are a few AI-generated ideas to help you get back on track.</p>
+            </div>
+
+            <h3 style="font-size: 16px; margin-bottom: 12px; color: #fff;">AI Video Ideas</h3>
+            <ul style="padding: 0; margin: 0 0 20px 0;">
+              ${ideaRows}
+            </ul>
+
+            <div style="text-align: center; margin-top: 8px;">
+              <a href="${process.env.FRONTEND_BASE || '#'}" style="display: inline-block; text-decoration: none; background: linear-gradient(90deg,#7c5cff,#5b3bff); color: #fff; padding: 12px 20px; border-radius: 10px; font-weight: 700;">Open SEOTube Dashboard</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 36px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px; color: #9aa4b2; font-size: 13px;">
+              <div>Automating your YouTube success, one video at a time.</div>
+              <div style="margin-top:8px; font-size:12px; color:#657085;">© 2026 SEOTube. All rights reserved.</div>
+            </div>
+          </div>
+        </body>
+      </html>
             `,
         });
     } catch (err) {
