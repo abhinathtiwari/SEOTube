@@ -1,0 +1,38 @@
+1. Automatic SEO optimization
+	- When a user signs up and connects their channel, SEOTube automatically identifies underperforming videos and lists them on the Home page with important metadata.
+	- A cron job (controlled by the `CRON_TIME` environment variable) periodically collects title, description, and tags from the least-performing videos and sends them to an AI agent for analysis.
+	- The AI returns SEO-optimized title, description, tags, and a recommended `categoryId` for each video. These suggestions are applied automatically to the videos.
+	- After optimization completes, the user receives an email summarizing the optimization, including SEO scores and differences from previous metadata.
+	- Users can pause automatic updates using the "Pause Update" control on the `/user` page.
+
+2. Authentication & user interface
+	- JWT-based authentication; passwords are hashed and verified using `bcrypt`.
+	- Cookie-based token storage (safer than localStorage); logout removes the JWT cookie.
+	- Email and password validation with proper error handling for auth failures.
+	- Auth routes and critical APIs are protected by an auth middleware that validates tokens.
+	- The app includes a stylish authentication page, show/hide password controls, a carousel explaining SEOTube, and conditional rendering for auth forms.
+	- If no token is present in cookies, the user is redirected to the Auth page; otherwise the user is taken to Home.
+
+3. User profile & account management
+	- The Home page displays the channel name, channel URL, and channel logo for better UX.
+	- The `/user` page shows additional data: email, channel name, channel URL, when the optimization cron last ran, and when it will run next.
+	- Users can permanently delete their account from the `/user` page. When an account is deleted, SEOTube attempts to revoke any granted YouTube permissions.
+
+4. On-demand optimization and video listing
+	- The Videos page lists videos sorted by creation date (recent videos first) and shows only the most recent 10 by default to reduce backend load.
+	- Pagination is available for older videos.
+	- Users can trigger an "Optimize Now" action for an individual video; only that video will be processed.
+	- The optimize action is disabled for videos that were recently optimized; recently-optimized videos are marked in the UI.
+
+5. AI channel analysis & video ideas
+	- On signup, the user's five most recent videos are sent to AI to analyze the creator's video types and patterns.
+	- Based on this analysis, the AI generates channel-level advice and five video ideas, which are shown on the Home page.
+	- The generated ideas are stored in the database and are only updated when a new video is added. If a new video appears, the AI re-analyzes the last five videos and refreshes advice and ideas to conserve AI tokens.
+
+6. Consistency tracking & reminders
+	- A consistency graph shows the user's upload frequency and gaps between recent videos (last four uploads).
+	- A daily cron job checks for users who have not uploaded within the configured threshold (`REMINDER_THRESHOLD_DAYS`) and sends a reminder email with five AI-generated video ideas.
+	- This reminder process runs separately from the optimization cron and helps improve user consistency.
+
+
+
