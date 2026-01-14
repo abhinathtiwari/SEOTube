@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { User } from "../models/Users";
+import { decryptRefreshToken } from "../utils/crypto";
 import { google } from "googleapis";
 import { sendReminderEmail } from "../utils/sendEmail";
 
@@ -12,11 +13,14 @@ export const startReminderCron = () => {
 
         for (const user of users) {
             try {
+                if (!user.youtubeRefreshToken) continue;
                 const auth = new google.auth.OAuth2(
                     process.env.YT_CLIENT_ID,
                     process.env.YT_CLIENT_SECRET
                 );
-                auth.setCredentials({ refresh_token: user.youtubeRefreshToken });
+                const plain = decryptRefreshToken(user.youtubeRefreshToken);
+                if (!plain) continue;
+                auth.setCredentials({ refresh_token: plain });
 
                 const youtube = google.youtube({ version: "v3", auth });
 

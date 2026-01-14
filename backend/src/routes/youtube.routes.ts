@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
+import { decryptRefreshToken } from "../utils/crypto";
 import { authMiddleware } from "../utils/middlewares";
 import { getChannelData } from "../utils/channelData";
 import axios from "axios";
@@ -14,8 +15,10 @@ router.get("/getData", authMiddleware, async (req: any, res) => {
     const user = req.user;
     if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
 
+    const refreshToken = decryptRefreshToken(user.youtubeRefreshToken);
+
     oauth2Client.setCredentials({
-      refresh_token: user.youtubeRefreshToken,
+      refresh_token: refreshToken,
     });
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
@@ -46,8 +49,10 @@ router.put("/update/:id", async (req, res) => {
 
     if (!refreshToken) return res.status(400).json({ message: "Missing refreshToken" });
 
+    const plainRefresh = decryptRefreshToken(refreshToken);
+
     oauth2Client.setCredentials({
-      refresh_token: refreshToken,
+      refresh_token: plainRefresh,
     });
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
@@ -77,7 +82,7 @@ router.post("/analytics", authMiddleware, async (req: any, res) => {
   try {
     let refreshToken: string | undefined;
     if (req.user?.youtubeRefreshToken) {
-      refreshToken = req.user.youtubeRefreshToken;
+      refreshToken = decryptRefreshToken(req.user.youtubeRefreshToken);
     }
 
     if (!refreshToken) {
@@ -180,7 +185,7 @@ router.get("/recent-videos", authMiddleware, async (req: any, res) => {
     if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
 
     oauth2Client.setCredentials({
-      refresh_token: user.youtubeRefreshToken,
+      refresh_token: decryptRefreshToken(user.youtubeRefreshToken),
     });
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
@@ -225,7 +230,7 @@ router.post("/optimize/:id", authMiddleware, async (req: any, res) => {
     }
 
     oauth2Client.setCredentials({
-      refresh_token: user.youtubeRefreshToken,
+      refresh_token: decryptRefreshToken(user.youtubeRefreshToken),
     });
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
@@ -257,7 +262,7 @@ router.post("/optimize/:id", authMiddleware, async (req: any, res) => {
     const aiUpdate = aiRes.data.output?.[0];
     if (!aiUpdate) throw new Error("AI failed to generate update");
 
-    // Update video on YouTube
+    // Update video on YouTube (pass decrypted refresh token)
     await axios.put(
       process.env.BACKEND_BASE! + `/youtube/update/${videoId}`,
       {
@@ -265,7 +270,7 @@ router.post("/optimize/:id", authMiddleware, async (req: any, res) => {
         description: aiUpdate.description,
         tags: aiUpdate.tags,
         categoryId: aiUpdate.categoryId,
-        refreshToken: user.youtubeRefreshToken,
+        refreshToken: decryptRefreshToken(user.youtubeRefreshToken),
       }
     );
 
