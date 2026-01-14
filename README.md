@@ -1,85 +1,132 @@
 # SEOTube
 
-SEOTube is an automated YouTube SEO optimizer that analyzes a user's channel, generates SEO-optimized titles, descriptions and tags using a generative AI model, updates videos through the YouTube API, and notifies users by email. It's built with a TypeScript Node.js backend and a React + Vite frontend.
+SEOTube is a developer tool that helps YouTube creators find underperforming videos and automatically SEO-optimize their metadata (title, description, tags, category). The project combines scheduled (cron) and on-demand optimization powered by AI, integrates with YouTube OAuth, sends email notifications, and provides a web UI for managing optimizations and user settings.
 
-**Tech stack**
-- Backend: Node.js, Express, TypeScript, Mongoose (MongoDB)
-- Frontend: React, Vite, TypeScript
-- AI: Google Generative AI (Gemini)
-- Email: Resend
+**Tech stack**: Node.js + TypeScript (backend), Vite + React + TypeScript (frontend), MongoDB, YouTube OAuth, OpenAI/Gemini (AI), Resend (email)
 
-## Features
-- Connect a YouTube channel via Google OAuth
-- Periodic cron job to analyze least-performing videos
-- AI-generated SEO improvements (title, description, tags)
-- Automatic updates to video metadata via YouTube API
-- Email notifications when updates are applied
+**Repository layout**
+- `backend/` — Express/TS API server, cron jobs, YouTube integrations, and worker logic.
+- `frontend/` — Vite + React app (TypeScript) providing the UI for authentication, home, videos, and user settings.
 
-## Project layout
-- `backend/`: Express API and cron job
-  - `src/app.ts` - Express app and route registrations
-  - `src/server.ts` - app bootstrap, DB connect, and cron start
-  - `src/config/` - configuration helpers (MongoDB, YouTube OAuth)
-  - `src/routes/` - API routes (`/auth`, `/youtube`, `/youtubecron`, `/ai`, `/auth/user`)
-  - `src/jobs/cron.job.ts` - cron worker that runs SEO pipeline
-  - `src/utils/` - helpers (email, prompts, middlewares)
-- `frontend/`: React single-page app (Vite)
+**Important features (high level)**
+- Automatic SEO optimization: scheduled cron job detects underperforming videos and updates their metadata using AI-generated suggestions.
+- On-demand optimization: optimize individual videos from the UI.
+- AI-based analysis: generates channel-level advice and video ideas based on recent uploads.
+- Email notifications: users are emailed when optimizations complete and when reminder/consistency alerts fire.
+- Auth & security: JWT-based auth stored in cookies, password hashing with bcrypt, and YouTube OAuth for channel access.
+- Account management: users can pause automatic updates and delete their account (revoking permissions).
 
-## Environment variables
-Create a `.env` file in `backend/` with the following variables:
+**Architecture & components**
+- Backend: `src/app.ts`, `src/server.ts`, route modules in `src/routes/` (auth, youtube, ai, user, cron triggers), cron jobs in `src/jobs/`.
+- Frontend: React pages located in `frontend/src/pages/` and common components in `frontend/src/components/`.
+- DB: MongoDB connection configured in `backend/src/config/db.ts`.
+- AI: Uses OpenAI / Gemini keys to generate SEO metadata and content suggestions.
+- Email: Resend is used to send transactional mails (on optimization completion and reminders).
 
-- `MONGO_URI` - MongoDB connection string
-- `PORT` - Backend server port (e.g. `3000`)
-- `YT_CLIENT_ID` - Google OAuth client ID
-- `YT_CLIENT_SECRET` - Google OAuth client secret
-- `FRONTEND_BASE` - Frontend base URL (e.g. `http://localhost:5173`)
-- `JWT_SECRET` - Secret used to sign auth JWTs
-- `RESEND_API_KEY` - API key for Resend email service
-- `GEMINI_API_KEY` - API key for Google Generative AI (Gemini)
-- `CRON_TIME` - Cron schedule expression (e.g. `0 */6 * * *`)
-- `NUMBER_OF_VIDEOS` - Number of worst-performing videos to analyze per channel
+**Environment variables**
+Copy the example env files and fill values before running:
 
-Notes:
-- The Google OAuth redirect URI used by the app is `http://localhost:3000/auth/youtube/callback`. Make sure this is registered in your Google Cloud OAuth credentials.
-- The backend serves static files from `public/` and expects the frontend to run on `http://localhost:5173` by default (CORS configured accordingly).
+- Backend: copy `backend/.example.env` to `backend/.env` and populate values.
+  Important variables (fill appropriately):
+  - `PORT` — backend port (default 3000)
+  - `MONGO_URI` — MongoDB connection string
+  - `YT_CLIENT_ID` / `YT_CLIENT_SECRET` — Google OAuth credentials
+  - `OPENAI_KEY` / `GEMINI_API_KEY` — AI API keys
+  - `JWT_SECRET`, `REFRESH_TOKEN_SECRET` — token secrets
+  - `RESEND_API_KEY`, `RESEND_FROM_EMAIL` — email sending credentials
+  - `FRONTEND_BASE` — frontend base URL (used for callbacks/links)
+  - `CRON_TIME` / `CRON_TIME2` — cron schedule expressions for optimization/reminders
+  - `NUMBER_OF_VIDEOS` — number of videos processed per run
+  - `REMINDER_THRESHOLD_DAYS` — days since last upload to trigger reminders
 
-## Quick start (development)
-Prerequisites: Node.js (16+ recommended), npm or yarn, a MongoDB instance.
+- Frontend: copy `frontend/.example.env.com` to `frontend/.env` and set:
+  - `BACKEND_BASE` — backend API base URL (e.g., `http://localhost:3000`)
 
-1. Backend
+Note: Be careful to keep secrets out of source control. Use a secure vault for production secrets.
+
+**Setup & running (local development)**
+Prerequisites:
+- Node.js (v16+ recommended)
+- npm or yarn
+- MongoDB running (local or hosted)
+
+Backend (API)
+
+1. Open a terminal in `backend/`
+2. Install dependencies:
 
 ```bash
 cd backend
 npm install
-# create .env with the variables above
+```
+
+3. Create `.env` by copying the example and populate values:
+
+```bash
+copy .example.env .env
+# then edit backend/.env to add secrets
+```
+
+4. Start the dev server:
+
+```bash
 npm run dev
 ```
 
-2. Frontend
+By default the backend listens on the `PORT` value (example: `3000`). Cron jobs that perform optimization and reminders run as part of the backend process (see `src/jobs/`).
+
+Frontend (Web UI)
+
+1. Open a terminal in `frontend/`
+2. Install dependencies:
 
 ```bash
 cd frontend
 npm install
+```
+
+3. Create `.env` by copying the example and set `BACKEND_BASE`:
+
+```bash
+copy .example.env.com .env
+# then edit frontend/.env to point to the backend API
+```
+
+4. Start the dev server:
+
+```bash
 npm run dev
 ```
 
-Open the frontend at `http://localhost:5173` and the backend listens on the port set in `PORT` (default `3000` in many local setups).
+The frontend typically runs on Vite's default port (e.g., `5173`). Configure `FRONTEND_BASE` (backend `.env`) if used for OAuth or callbacks.
 
-## How it works (high level)
-1. A user signs up / logs in to the frontend and connects their YouTube account via Google OAuth. The backend stores a refresh token and channel ID on the user record.
-2. A periodic cron job (configured via `CRON_TIME`) finds users with refresh tokens, fetches analytics for their channel, selects the least-performing videos, and builds a JSON prompt.
-3. The prompt is sent to the Gemini model via the `/ai/run` endpoint; the returned structured JSON contains new titles, descriptions and tags.
-4. The backend calls YouTube APIs to update the video metadata using the stored refresh token.
-5. After updates, the backend sends a notification email via Resend.
+**Key API surfaces (overview)**
+- Authentication: endpoints for signup/login/refresh and cookie-based JWT flows (routes implemented in `src/routes/authUser.routes.ts`).
+- YouTube integration: routes to fetch and manage videos, trigger optimizations, and handle OAuth (`src/routes/authYoutube.routes.ts`, `src/routes/youtube.routes.ts`).
+- AI endpoints: helpers to request AI-generated titles/descriptions/tags and channel advice (`src/routes/ai.routes.ts`).
+- User management: profile, pause/resume auto-updates, delete account (`src/routes/user.routes.ts`).
+- Cron controls: some cron endpoints and triggers are available for testing or manual runs (`src/routes/youtube.cron.routes.ts`).
 
-## Important endpoints (backend)
-- `POST /ai/run` - Run the AI generation with a `prompt` body.
-- `GET /auth/youtube` - Start Google OAuth flow (requires logged-in user).
-- `GET /auth/youtube/callback` - OAuth callback that stores refresh token and channel ID.
-- `POST /youtubecron/analytics` - Internal endpoint used by the cron worker to fetch analytics for a channel (accepts `{ refreshToken }`).
-- `PUT /youtube/update/:videoId` - Update a video (used internally by cron workflow).
+Refer to the route files under `backend/src/routes/` for exact endpoints and request/response shapes.
 
-## Notes for deployment
-- Ensure secure storage of secrets (`GEMINI_API_KEY`, `YT_CLIENT_SECRET`, `RESEND_API_KEY`, `JWT_SECRET`, `MONGO_URI`).
-- Update `FRONTEND_BASE` to your production frontend origin and add that origin to CORS in `src/app.ts` if changed.
-- Register proper OAuth redirect URIs in Google Cloud (production callback differs from local).
+**Operational notes**
+- Cron scheduling: `CRON_TIME`/`CRON_TIME2` control when optimization and reminder jobs run. In dev, you may set them to frequent schedules for testing.
+- AI usage: AI calls consume tokens — the system minimizes calls by performing analysis only when new videos appear and by batching operations.
+- Emails: ensure `RESEND_API_KEY` and `RESEND_FROM_EMAIL` are set for notification delivery.
+- YouTube scopes: set correct OAuth credentials and ensure the OAuth consent and redirect URIs are configured in Google Cloud console.
+
+**Security & privacy**
+- Passwords are hashed using `bcrypt`.
+- Authentication tokens are stored in cookies (not in localStorage).
+- When a user deletes their account the service attempts to revoke granted YouTube permissions.
+
+**Troubleshooting**
+- If server fails to start, check `backend/.env` for missing keys (Mongo URI, JWT secrets, OAuth credentials).
+- Confirm MongoDB connectivity from the `MONGO_URI` value.
+- For email issues verify `RESEND_API_KEY` and timestamps in logs for job runs.
+
+**Contributing**
+- Open a PR with focused changes. Run linters/tests before committing.
+
+---
+Created to help YouTube creators automate metadata SEO improvements and provide actionable channel guidance.
