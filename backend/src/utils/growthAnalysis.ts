@@ -2,6 +2,7 @@ import { google } from "googleapis";
 import axios from "axios";
 import { User } from "../models/Users";
 import { buildGrowthPrompt } from "./prompts";
+import { decryptRefreshToken } from "./crypto";
 
 export const performGrowthAnalysis = async (user: any) => {
     try {
@@ -9,7 +10,9 @@ export const performGrowthAnalysis = async (user: any) => {
             process.env.YT_CLIENT_ID,
             process.env.YT_CLIENT_SECRET
         );
-        auth.setCredentials({ refresh_token: user.youtubeRefreshToken });
+        // decrypt refresh token for use (do not mutate DB)
+        const refreshToken = decryptRefreshToken(user.youtubeRefreshToken);
+        auth.setCredentials({ refresh_token: refreshToken });
 
         const youtube = google.youtube({ version: "v3", auth });
 

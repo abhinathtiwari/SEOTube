@@ -5,6 +5,7 @@ import { sendSuccessEmail } from "../utils/sendEmail";
 import { buildPrompt } from "../utils/prompts";
 import { oauth2Client } from "../config/youtubeAuth";
 import { getChannelData } from "../utils/channelData";
+import { decryptRefreshToken } from "../utils/crypto";
 
 
 export async function runSeoCron() {
@@ -17,9 +18,12 @@ export async function runSeoCron() {
     try {
       // Get analytics
       console.log(user.email);
+      if (!user.youtubeRefreshToken) continue;
+      const plainToken = decryptRefreshToken(user.youtubeRefreshToken);
+
       const analyticsRes = await axios.post(
         process.env.BACKEND_BASE + "/youtubecron/analytics",
-        { refreshToken: user.youtubeRefreshToken }
+        { refreshToken: plainToken }
       );
 
       const videos = analyticsRes.data.leastPerformingVideosMetaData;
@@ -30,7 +34,7 @@ export async function runSeoCron() {
 
 
       oauth2Client.setCredentials({
-        refresh_token: user.youtubeRefreshToken,
+        refresh_token: plainToken,
       });
       const channelData = await getChannelData(oauth2Client);
       channelName = channelData.channelName;
@@ -61,7 +65,7 @@ export async function runSeoCron() {
             description: v.description,
             tags: v.tags,
             categoryId: v.categoryId,
-            refreshToken: user.youtubeRefreshToken,
+            refreshToken: plainToken,
           }
         );
       }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { oauth2Client } from "../config/youtubeAuth";
+import { encryptRefreshToken } from "../utils/crypto";
 import { google } from "googleapis";
 import { authMiddleware } from "../utils/middlewares";
 
@@ -31,8 +32,10 @@ router.get("/youtube/callback", authMiddleware, async (req: any, res) => {
 
   if (!channel) return res.send("No channel found");
 
-  // Save refresh token and channel ID for logged-in user
-  req.user.youtubeRefreshToken = tokens.refresh_token || req.user.youtubeRefreshToken;
+  // Save (encrypted) refresh token and channel ID for logged-in user
+  if (tokens.refresh_token) {
+    req.user.youtubeRefreshToken = encryptRefreshToken(tokens.refresh_token);
+  }
   req.user.channelId = channel.id;
   await req.user.save();
 
