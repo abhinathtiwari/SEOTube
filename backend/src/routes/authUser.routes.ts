@@ -65,12 +65,14 @@ router.delete("/deleteaccount", authMiddleware, async (req: any, res) => {
   try {
     const result = await User.deleteOne({ email: user.email });
     if (user.youtubeRefreshToken) {
+      const { decryptRefreshToken } = await import("../utils/crypto");
+      const plain = decryptRefreshToken(user.youtubeRefreshToken);
       const res = await axios.post(
         "https://oauth2.googleapis.com/revoke",
         null,
         {
           params: {
-            token: user.youtubeRefreshToken,
+            token: plain,
           },
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",

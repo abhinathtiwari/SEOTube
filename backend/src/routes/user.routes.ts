@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authMiddleware } from "../utils/middlewares";
 import { oauth2Client } from "../config/youtubeAuth";
 import { getChannelData } from "../utils/channelData";
+import { decryptRefreshToken } from "../utils/crypto";
 import { CronExpressionParser } from "cron-parser";
 
 const router = Router();
@@ -53,7 +54,7 @@ router.get("/channel", authMiddleware, async (req: any, res) => {
         if (!user?.youtubeRefreshToken) return res.status(401).send("No token");
 
         oauth2Client.setCredentials({
-            refresh_token: user.youtubeRefreshToken,
+            refresh_token: decryptRefreshToken(user.youtubeRefreshToken),
         });
 
         const channelData = await getChannelData(oauth2Client);

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { google } from "googleapis";
 import { oauth2Client } from "../config/youtubeAuth";
+import { decryptRefreshToken } from "../utils/crypto";
 
 const router = Router();
 
@@ -16,7 +17,9 @@ router.post("/analytics", async (req: any, res) => {
       return res.status(401).json({ message: "No auth source found" });
     }
 
-    oauth2Client.setCredentials({ refresh_token: refreshToken });
+    const plain = decryptRefreshToken(refreshToken);
+
+    oauth2Client.setCredentials({ refresh_token: plain });
 
     const youtube = google.youtube({ version: "v3", auth: oauth2Client });
 
