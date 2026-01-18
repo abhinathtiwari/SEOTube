@@ -7,6 +7,7 @@
 
 2. Authentication & user interface
 	- JWT-based authentication; passwords are hashed and verified using `bcrypt`.
+	- Refresh Tokens are Encrypted Using aes-256-gcm algorithm
 	- Cookie-based token storage (safer than localStorage); logout removes the JWT cookie.
 	- Email and password validation with proper error handling for auth failures.
 	- Auth routes and critical APIs are protected by an auth middleware that validates tokens.
@@ -33,6 +34,11 @@
 	- A consistency graph shows the user's upload frequency and gaps between recent videos (last four uploads).
 	- A daily cron job checks for users who have not uploaded within the configured threshold (`REMINDER_THRESHOLD_DAYS`) and sends a reminder email with five AI-generated video ideas.
 	- This reminder process runs separately from the optimization cron and helps improve user consistency.
+
+7. Additional features
+   - Thumbnail Update
+   - 
+
 
 
 

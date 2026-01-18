@@ -10,7 +10,7 @@ router.post("/run", async (req, res) => {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-lite",
+      model: process.env.GEMINI_MODEL!,
     });
 
     const result = await model.generateContent(prompt);
@@ -28,8 +28,9 @@ router.post("/run", async (req, res) => {
     }
 
     res.json({ output: parsed });
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (err: any) {
+    console.error("AI Route Error:", err);
+    res.status(500).json({ error: err.message || "Internal Server Error", details: err });
   }
 });
 
