@@ -28,12 +28,23 @@ export const performGrowthAnalysis = async (user: any) => {
         const items = response.data.items || [];
         if (items.length === 0) return null;
 
-        const recentVideos = items.map(item => ({
-            id: item.id?.videoId,
+        const videoIds = items.map(item => item.id?.videoId).filter(id => id) as string[];
+
+        // Fetch full video details including tags
+        const videoDetailsResponse = await youtube.videos.list({
+            id: videoIds,
+            part: ["snippet"],
+        });
+
+        const recentVideos = videoDetailsResponse.data.items?.map(item => ({
+            id: item.id,
             publishedAt: item.snippet?.publishedAt,
             title: item.snippet?.title,
             description: item.snippet?.description,
-        }));
+            tags: item.snippet?.tags || [],
+        })) || [];
+
+        if (recentVideos.length === 0) return null;
 
         const currUploadedVideoId = recentVideos[0].id;
 
