@@ -191,7 +191,9 @@ npm run dev
 | `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` | - |
 
 ### Frontend (`frontend/.env`)
-- `BACKEND_BASE` — Backend API base URL (e.g., `http://localhost:3000`)
+| Variable | Description | Default | Setup Guide |
+| :--- | :--- | :--- | :--- |
+| `BACKEND_BASE` | Backend API base URL | `http://localhost:3000` | - |
 
 ---
 
