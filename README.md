@@ -90,7 +90,7 @@ SEOTube is a powerful developer tool designed to help YouTube creators revitaliz
 
 ### Optimization Cron Job Flow
 ```mermaid
-graph TD
+graph LR
     A[Cron Job Starts] --> B[Fetch Connected Users]
     B --> C{For Each User}
     C --> D{Is Optimization Paused?}
