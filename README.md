@@ -1,6 +1,6 @@
 # SEOTube — Automatic YouTube SEO Assistant
 
-SEOTube is a powerful developer tool designed to help YouTube creators revitalize underperforming content. By combining **YouTube Analytics**, **Google Gemini AI**, and **Automated Cron Jobs**, SEOTube identifies videos that aren't reaching their potential and automatically updates their metadata to improve search visibility and Click-Through Rate (CTR).
+SEOTube is a powerful developer tool designed to help YouTube creators revitalize underperforming content. By combining **YouTube Analytics**, **Google Gemini AI**, and **Automated Cron Jobs**, SEOTube identifies videos that aren't reaching their potential and automatically updates their metadata to improve search visibility and Click-Through Rate.
 
 ---
 
@@ -45,15 +45,62 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 
 ## 📊 SEOTube vs YouTube Studio
 
-| Feature | SEOTube | YouTube Studio |
-| :--- | :---: | :---: |
-| **Automated Metadata Updates** | ✔️ | ❌ |
-| **AI-Powered Title/Hooks** | ✔️ | ❌ |
-| **Scheduled SEO Cron Jobs** | ✔️ | ❌ |
-| **Upload Consistency Reminders** | ✔️ | ❌ |
-| **Bulk Performance Analysis** | ✔️ | ✔️ |
-| **AI Video Idea Generation** | ✔️ | ❌ |
-| **Automatic Hashtag Injection** | ✔️ | ❌ |
+<table>
+  <tr>
+    <td width="60%">
+      <br>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th align="center">SEOTube</th>
+            <th align="center">YouTube Studio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Automated Metadata Updates</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>AI-Powered Title/Hooks</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Scheduled SEO Cron Jobs</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Upload Consistency Reminders</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Bulk Performance Analysis</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">✔️</td>
+          </tr>
+          <tr>
+            <td><strong>AI Video Idea Generation</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Automatic Hashtag Injection</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+    <td align="center" width="40%">
+      <img src="backend/public/images/funnyImage.png" alt="SEOTube Comparison" width="350px">
+    </td>
+  </tr>
+</table>
 
 ---
 
