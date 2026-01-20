@@ -6,12 +6,12 @@ SEOTube is a powerful developer tool designed to help YouTube creators revitaliz
 
 ## 📑 Table of Contents
 - [✨ Key Features](#-key-features)
-- [ SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
+- [📊 SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
 - [🏗️ Architecture & Workflow](#️-architecture--workflow)
 - [🛠️ Tech Stack](#️-tech-stack)
-- [⚙️ Environment Variables](#️-environment-variables)
 - [🚀 Setup & Installation](#-setup--installation)
-- [🔒 Security & Privacy](#-security--privacy)
+- [⚙️ Environment Variables](#️-environment-variables)
+- [ Security & Privacy](#-security--privacy)
 
 ---
 
@@ -90,7 +90,7 @@ SEOTube is a powerful developer tool designed to help YouTube creators revitaliz
 
 ### Optimization Cron Job Flow
 ```mermaid
-graph TD
+graph LR
     A[Cron Job Starts] --> B[Fetch Connected Users]
     B --> C{For Each User}
     C --> D{Is Optimization Paused?}
@@ -104,6 +104,19 @@ graph TD
     K --> J[Update Last Optimized Date]
     J --> C
     C --> L[End Job]
+```
+
+### Token Saver Suggestion Flow
+```mermaid
+graph LR
+    A[User Opens Dashboard] --> B[Fetch 5 Most Recent Videos]
+    B --> C{Is Last Video ID Cached?}
+    C -- No / New Video Found --> D[Call Gemini AI]
+    D --> E[Generate Advice & 5 Video Ideas]
+    E --> F[Cache Results & Last Video ID in DB]
+    F --> G[Display Data to User]
+    C -- Yes (Same Video ID) --> H[Fetch Data from DB Cache]
+    H --> G
 ```
 
 ### Repository Layout
@@ -120,6 +133,39 @@ graph TD
 - **Email**: Resend API
 - **Scheduling**: Node-cron
 - **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
+
+---
+
+## 🚀 Setup & Installation
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas or local instance
+- Google Cloud Project with YouTube APIs enabled
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/abhinathtiwari/SEOTube.git
+cd seotube
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+cp .example.env .env
+# Setup env variables (see section below)
+npm run dev
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+cp .example.env.com .env
+# Set BACKEND_BASE=http://localhost:3000
+npm run dev
+```
 
 ---
 
@@ -145,40 +191,9 @@ graph TD
 | `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` | - |
 
 ### Frontend (`frontend/.env`)
-- `BACKEND_BASE` — Backend API base URL (e.g., `http://localhost:3000`)
-
----
-
-## 🚀 Setup & Installation
-
-### Prerequisites
-- Node.js (v18+)
-- MongoDB Atlas or local instance
-- Google Cloud Project with YouTube APIs enabled
-
-### 1. Clone & Install
-```bash
-git clone https://github.com/abhinathtiwari/SEOTube.git
-cd seotube
-```
-
-### 2. Backend Setup
-```bash
-cd backend
-npm install
-cp .example.env .env
-# Edit .env with your credentials
-npm run dev
-```
-
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-cp .example.env.com .env
-# Set BACKEND_BASE=http://localhost:3000
-npm run dev
-```
+| Variable | Description | Default | Setup Guide |
+| :--- | :--- | :--- | :--- |
+| `BACKEND_BASE` | Backend API base URL | `http://localhost:3000` | - |
 
 ---
 
@@ -187,5 +202,3 @@ npm run dev
 - **Revokable Access**: Deleting your account automatically attempts to revoke Google OAuth permissions.
 - **Secure Auth**: Passwords are hashed with `bcrypt`, and session tokens use secure cookies.
 
----
-*Created to help YouTube creators automate metadata SEO improvements and provide actionable channel guidance.*
