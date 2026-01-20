@@ -36,7 +36,7 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 - **Frontend**: Vite + React, CSS3 (Glassmorphism & Micro-animations)
 - **Backend**: Node.js, Express, TypeScript
 - **Database**: MongoDB (Mongoose)
-- **AI Engine**: Google Gemini (Primary) / OpenAI (Optional)
+- **AI Engine**: Google Gemini
 - **Email**: Resend API
 - **Scheduling**: Node-cron
 - **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
@@ -86,22 +86,23 @@ graph TD
 ## ⚙️ Environment Variables
 
 ### Backend (`backend/.env`)
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `PORT` | Server listening port | `3000` |
-| `MONGO_URI` | MongoDB Connection String | - |
-| `YT_CLIENT_ID` | Google Cloud OAuth Client ID | - |
-| `YT_CLIENT_SECRET` | Google Cloud OAuth Client Secret | - |
-| `GEMINI_API_KEY` | Google Gemini AI Key | - |
-| `GEMINI_MODEL` | AI Model Version | `gemini-2.5-flash-lite` |
-| `JWT_SECRET` | Secret for user sessions | - |
-| `REFRESH_TOKEN_SECRET` | Secret for token encryption | - |
-| `RESEND_API_KEY` | Resend Email API Key | - |
-| `FRONTEND_BASE` | URL of the frontend app | - |
-| `BACKEND_BASE` | URL of the backend API | `http://localhost:3000` |
-| `CRON_TIME` | SEO Cron Schedule (Cron Expr) | `0 0 */15 * *` |
-| `CRON_TIME2` | Reminder Cron Schedule | `0 0 */1 * *` |
-| `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` |
+| Variable | Description | Default | Setup Guide |
+| :--- | :--- | :--- | :--- |
+| `PORT` | Server listening port | `3000` | - |
+| `MONGO_URI` | MongoDB Connection String | - | [Watch Tutorial](https://youtu.be/SMXbGrKe5gM?si=Js7VRVytf9qA4gEW) |
+| `YT_CLIENT_ID` | Google Cloud OAuth Client ID | - | [Watch Tutorial](https://youtu.be/D8DMj2lQMwo?si=HSQ0Ni6xNe2KNJfb) |
+| `YT_CLIENT_SECRET` | Google Cloud OAuth Client Secret | - | [Watch Tutorial](https://youtu.be/D8DMj2lQMwo?si=HSQ0Ni6xNe2KNJfb) |
+| `GEMINI_API_KEY` | Google Gemini AI Key | - | [Watch Tutorial](https://youtu.be/Uyn-P2nRvDA?si=brsYbIpXi-8zyb_p) / [Get Key](https://aistudio.google.com/api-keys) |
+| `GEMINI_MODEL` | AI Model Version | `gemini-2.5-flash-lite` | - |
+| `JWT_SECRET` | Secret for user sessions | - | - |
+| `REFRESH_TOKEN_SECRET` | Secret for token encryption | - | - |
+| `RESEND_API_KEY` | Resend Email API Key | - | [Get Key](https://resend.com/api-keys) |
+| `RESEND_FROM_EMAIL` | Resend From Email | `onboarding@resend.dev` | - |
+| `FRONTEND_BASE` | URL of the frontend app | - | - |
+| `BACKEND_BASE` | URL of the backend API | `http://localhost:3000` | - |
+| `CRON_TIME` | SEO Cron Schedule (Cron Expr) | `0 0 */15 * *` | - |
+| `CRON_TIME2` | Reminder Cron Schedule | `0 0 */1 * *` | - |
+| `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` | - |
 
 ### Frontend (`frontend/.env`)
 - `BACKEND_BASE` — Backend API base URL (e.g., `http://localhost:3000`)
