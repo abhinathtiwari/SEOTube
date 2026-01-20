@@ -6,12 +6,12 @@ SEOTube is a powerful developer tool designed to help YouTube creators revitaliz
 
 ## 📑 Table of Contents
 - [✨ Key Features](#-key-features)
-- [ SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
+- [📊 SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
 - [🏗️ Architecture & Workflow](#️-architecture--workflow)
 - [🛠️ Tech Stack](#️-tech-stack)
-- [⚙️ Environment Variables](#️-environment-variables)
 - [🚀 Setup & Installation](#-setup--installation)
-- [🔒 Security & Privacy](#-security--privacy)
+- [⚙️ Environment Variables](#️-environment-variables)
+- [ Security & Privacy](#-security--privacy)
 
 ---
 
@@ -136,6 +136,39 @@ graph LR
 
 ---
 
+## 🚀 Setup & Installation
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas or local instance
+- Google Cloud Project with YouTube APIs enabled
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/abhinathtiwari/SEOTube.git
+cd seotube
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+cp .example.env .env
+# Setup env variables (see section below)
+npm run dev
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+cp .example.env.com .env
+# Set BACKEND_BASE=http://localhost:3000
+npm run dev
+```
+
+---
+
 ## ⚙️ Environment Variables
 
 ### Backend (`backend/.env`)
@@ -162,43 +195,8 @@ graph LR
 
 ---
 
-## 🚀 Setup & Installation
-
-### Prerequisites
-- Node.js (v18+)
-- MongoDB Atlas or local instance
-- Google Cloud Project with YouTube APIs enabled
-
-### 1. Clone & Install
-```bash
-git clone https://github.com/abhinathtiwari/SEOTube.git
-cd seotube
-```
-
-### 2. Backend Setup
-```bash
-cd backend
-npm install
-cp .example.env .env
-# Edit .env with your credentials
-npm run dev
-```
-
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-cp .example.env.com .env
-# Set BACKEND_BASE=http://localhost:3000
-npm run dev
-```
-
----
-
 ## 🔒 Security & Privacy
 - **Encrypted Tokens**: Refresh tokens are stored using `aes-256-gcm` encryption.
 - **Revokable Access**: Deleting your account automatically attempts to revoke Google OAuth permissions.
 - **Secure Auth**: Passwords are hashed with `bcrypt`, and session tokens use secure cookies.
 
----
-*Created to help YouTube creators automate metadata SEO improvements and provide actionable channel guidance.*
