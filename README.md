@@ -64,15 +64,17 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 graph TD
     A[Cron Job Starts] --> B[Fetch Connected Users]
     B --> C{For Each User}
-    C --> D[Identify Least Performing Videos]
-    D --> E[Fetch Full Metadata & Tags]
-    E --> F[Generate SEO Prompt for AI]
-    F --> G[Gemini AI Generates Optimized Metadata]
-    G --> H[Update Video via YouTube API]
-    H --> I[Send Success Email Notification]
-    I --> J[Update Last Optimized Date]
+    C --> D{Is Optimization Paused?}
+    D -- Yes --> J
+    D -- No --> E[Identify Least Performing Videos]
+    E --> F[Fetch Full Metadata & Tags]
+    F --> G[Generate SEO Prompt for AI]
+    G --> H[Gemini AI Generates Optimized Metadata]
+    H --> I[Update Video via YouTube API]
+    I --> K[Send Success Email Notification]
+    K --> J[Update Last Optimized Date]
     J --> C
-    C --> K[End Job]
+    C --> L[End Job]
 ```
 
 ### Repository Layout
@@ -115,7 +117,7 @@ graph TD
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-repo/seotube.git
+git clone https://github.com/abhinathtiwari/SEOTube.git
 cd seotube
 ```
 
