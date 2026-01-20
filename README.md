@@ -1,23 +1,17 @@
 # SEOTube — Automatic YouTube SEO Assistant
 
-SEOTube is a powerful developer tool designed to help YouTube creators revitalize underperforming content. By combining **YouTube Analytics**, **Google Gemini AI**, and **Automated Cron Jobs**, SEOTube identifies videos that aren't reaching their potential and automatically updates their metadata to improve search visibility and Click-Through Rate (CTR).
+SEOTube is a powerful developer tool designed to help YouTube creators revitalize underperforming content. By combining **YouTube Analytics**, **Google Gemini AI**, and **Automated Cron Jobs**, SEOTube identifies videos that aren't reaching their potential and automatically updates their metadata to improve search visibility and Click-Through Rate.
 
 ---
 
 ## 📑 Table of Contents
-- [🚀 Overview](#-overview)
 - [✨ Key Features](#-key-features)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📊 SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
+- [ SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
 - [🏗️ Architecture & Workflow](#️-architecture--workflow)
+- [🛠️ Tech Stack](#️-tech-stack)
 - [⚙️ Environment Variables](#️-environment-variables)
 - [🚀 Setup & Installation](#-setup--installation)
 - [🔒 Security & Privacy](#-security--privacy)
-
----
-
-## 🚀 Overview
-SEOTube acts as an automated SEO strategist for your channel. Instead of manually reviewing hundreds of videos, SEOTube's background engine finds your "least performing" content and applies data-driven metadata improvements while you sleep.
 
 ---
 
@@ -32,28 +26,63 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 
 ---
 
-## 🛠️ Tech Stack
-- **Frontend**: Vite + React, CSS3 (Glassmorphism & Micro-animations)
-- **Backend**: Node.js, Express, TypeScript
-- **Database**: MongoDB (Mongoose)
-- **AI Engine**: Google Gemini (Primary) / OpenAI (Optional)
-- **Email**: Resend API
-- **Scheduling**: Node-cron
-- **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
-
----
-
 ## 📊 SEOTube vs YouTube Studio
 
-| Feature | SEOTube | YouTube Studio |
-| :--- | :---: | :---: |
-| **Automated Metadata Updates** | ✔️ | ❌ |
-| **AI-Powered Title/Hooks** | ✔️ | ❌ |
-| **Scheduled SEO Cron Jobs** | ✔️ | ❌ |
-| **Upload Consistency Reminders** | ✔️ | ❌ |
-| **Bulk Performance Analysis** | ✔️ | ✔️ |
-| **AI Video Idea Generation** | ✔️ | ❌ |
-| **Automatic Hashtag Injection** | ✔️ | ❌ |
+<table>
+  <tr>
+    <td width="60%" style="vertical-align: middle;">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th align="center">SEOTube</th>
+            <th align="center">YouTube Studio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Automated Metadata Updates</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>AI-Powered Title/Hooks</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Scheduled SEO Cron Jobs</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Upload Consistency Reminders</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Bulk Performance Analysis</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">✔️</td>
+          </tr>
+          <tr>
+            <td><strong>AI Video Idea Generation</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+          <tr>
+            <td><strong>Automatic Hashtag Injection</strong></td>
+            <td align="center">✔️</td>
+            <td align="center">❌</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+    <td align="center" width="40%" style="vertical-align: middle;">
+      <img src="backend/public/images/funnyImage.png" alt="SEOTube Comparison" width="350px">
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -64,15 +93,17 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 graph TD
     A[Cron Job Starts] --> B[Fetch Connected Users]
     B --> C{For Each User}
-    C --> D[Identify Least Performing Videos]
-    D --> E[Fetch Full Metadata & Tags]
-    E --> F[Generate SEO Prompt for AI]
-    F --> G[Gemini AI Generates Optimized Metadata]
-    G --> H[Update Video via YouTube API]
-    H --> I[Send Success Email Notification]
-    I --> J[Update Last Optimized Date]
+    C --> D{Is Optimization Paused?}
+    D -- Yes --> J
+    D -- No --> E[Identify Least Performing Videos]
+    E --> F[Fetch Full Metadata & Tags]
+    F --> G[Generate SEO Prompt for AI]
+    G --> H[Gemini AI Generates Optimized Metadata]
+    H --> I[Update Video via YouTube API]
+    I --> K[Send Success Email Notification]
+    K --> J[Update Last Optimized Date]
     J --> C
-    C --> K[End Job]
+    C --> L[End Job]
 ```
 
 ### Repository Layout
@@ -81,25 +112,37 @@ graph TD
 
 ---
 
+## 🛠️ Tech Stack
+- **Frontend**: Vite + React, CSS3 (Glassmorphism & Micro-animations)
+- **Backend**: Node.js, Express, TypeScript
+- **Database**: MongoDB (Mongoose)
+- **AI Engine**: Google Gemini
+- **Email**: Resend API
+- **Scheduling**: Node-cron
+- **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
+
+---
+
 ## ⚙️ Environment Variables
 
 ### Backend (`backend/.env`)
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `PORT` | Server listening port | `3000` |
-| `MONGO_URI` | MongoDB Connection String | - |
-| `YT_CLIENT_ID` | Google Cloud OAuth Client ID | - |
-| `YT_CLIENT_SECRET` | Google Cloud OAuth Client Secret | - |
-| `GEMINI_API_KEY` | Google Gemini AI Key | - |
-| `GEMINI_MODEL` | AI Model Version | `gemini-2.5-flash-lite` |
-| `JWT_SECRET` | Secret for user sessions | - |
-| `REFRESH_TOKEN_SECRET` | Secret for token encryption | - |
-| `RESEND_API_KEY` | Resend Email API Key | - |
-| `FRONTEND_BASE` | URL of the frontend app | - |
-| `BACKEND_BASE` | URL of the backend API | `http://localhost:3000` |
-| `CRON_TIME` | SEO Cron Schedule (Cron Expr) | `0 0 */15 * *` |
-| `CRON_TIME2` | Reminder Cron Schedule | `0 0 */1 * *` |
-| `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` |
+| Variable | Description | Default | Setup Guide |
+| :--- | :--- | :--- | :--- |
+| `PORT` | Server listening port | `3000` | - |
+| `MONGO_URI` | MongoDB Connection String | - | [Watch Tutorial](https://youtu.be/SMXbGrKe5gM?si=Js7VRVytf9qA4gEW) |
+| `YT_CLIENT_ID` | Google Cloud OAuth Client ID | - | [Watch Tutorial](https://youtu.be/D8DMj2lQMwo?si=HSQ0Ni6xNe2KNJfb) |
+| `YT_CLIENT_SECRET` | Google Cloud OAuth Client Secret | - | [Watch Tutorial](https://youtu.be/D8DMj2lQMwo?si=HSQ0Ni6xNe2KNJfb) |
+| `GEMINI_API_KEY` | Google Gemini AI Key | - | [Watch Tutorial](https://youtu.be/Uyn-P2nRvDA?si=brsYbIpXi-8zyb_p) / [Get Key](https://aistudio.google.com/api-keys) |
+| `GEMINI_MODEL` | AI Model Version | `gemini-2.5-flash-lite` | - |
+| `JWT_SECRET` | Secret for user sessions | - | - |
+| `REFRESH_TOKEN_SECRET` | Secret for token encryption | - | - |
+| `RESEND_API_KEY` | Resend Email API Key | - | [Get Key](https://resend.com/api-keys) |
+| `RESEND_FROM_EMAIL` | Resend From Email | `onboarding@resend.dev` | - |
+| `FRONTEND_BASE` | URL of the frontend app | - | - |
+| `BACKEND_BASE` | URL of the backend API | `http://localhost:3000` | - |
+| `CRON_TIME` | SEO Cron Schedule (Cron Expr) | `0 0 */15 * *` | - |
+| `CRON_TIME2` | Reminder Cron Schedule | `0 0 */1 * *` | - |
+| `DESCRIPTION_CHARACTERS_COUNT` | Max AI Description Length | `1500` | - |
 
 ### Frontend (`frontend/.env`)
 - `BACKEND_BASE` — Backend API base URL (e.g., `http://localhost:3000`)
@@ -115,7 +158,7 @@ graph TD
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-repo/seotube.git
+git clone https://github.com/abhinathtiwari/SEOTube.git
 cd seotube
 ```
 
