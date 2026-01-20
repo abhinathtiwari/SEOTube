@@ -106,6 +106,19 @@ graph LR
     C --> L[End Job]
 ```
 
+### Token Saver Suggestion Flow
+```mermaid
+graph LR
+    A[User Opens Dashboard] --> B[Fetch 5 Most Recent Videos]
+    B --> C{Is Last Video ID Cached?}
+    C -- No / New Video Found --> D[Call Gemini AI]
+    D --> E[Generate Advice & 5 Video Ideas]
+    E --> F[Cache Results & Last Video ID in DB]
+    F --> G[Display Data to User]
+    C -- Yes (Same Video ID) --> H[Fetch Data from DB Cache]
+    H --> G
+```
+
 ### Repository Layout
 - `backend/` — Express server, cron jobs, and AI integration.
 - `frontend/` — React application with performance dashboards.
