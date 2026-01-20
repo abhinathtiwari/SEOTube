@@ -5,19 +5,13 @@ SEOTube is a powerful developer tool designed to help YouTube creators revitaliz
 ---
 
 ## 📑 Table of Contents
-- [🚀 Overview](#-overview)
 - [✨ Key Features](#-key-features)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [📊 SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
+- [ SEOTube vs YouTube Studio](#-seotube-vs-youtube-studio)
 - [🏗️ Architecture & Workflow](#️-architecture--workflow)
+- [🛠️ Tech Stack](#️-tech-stack)
 - [⚙️ Environment Variables](#️-environment-variables)
 - [🚀 Setup & Installation](#-setup--installation)
 - [🔒 Security & Privacy](#-security--privacy)
-
----
-
-## 🚀 Overview
-SEOTube acts as an automated SEO strategist for your channel. Instead of manually reviewing hundreds of videos, SEOTube's background engine finds your "least performing" content and applies data-driven metadata improvements while you sleep.
 
 ---
 
@@ -29,17 +23,6 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 - **📧 Smart Notifications**: Get summarized email reports after every optimization run and reminders when you've been inactive for too long.
 - **🛑 Pause Control**: Instantly toggle automated updates on or off from your user profile.
 - **🔐 Enterprise-Grade Security**: AES-256-GCM encryption for OAuth tokens and JWT-based session management.
-
----
-
-## 🛠️ Tech Stack
-- **Frontend**: Vite + React, CSS3 (Glassmorphism & Micro-animations)
-- **Backend**: Node.js, Express, TypeScript
-- **Database**: MongoDB (Mongoose)
-- **AI Engine**: Google Gemini
-- **Email**: Resend API
-- **Scheduling**: Node-cron
-- **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
 
 ---
 
@@ -126,6 +109,17 @@ graph TD
 ### Repository Layout
 - `backend/` — Express server, cron jobs, and AI integration.
 - `frontend/` — React application with performance dashboards.
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend**: Vite + React, CSS3 (Glassmorphism & Micro-animations)
+- **Backend**: Node.js, Express, TypeScript
+- **Database**: MongoDB (Mongoose)
+- **AI Engine**: Google Gemini
+- **Email**: Resend API
+- **Scheduling**: Node-cron
+- **YouTube Integration**: YouTube Data API v3, YouTube Analytics API
 
 ---
 
