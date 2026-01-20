@@ -47,8 +47,7 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
 
 <table>
   <tr>
-    <td width="60%">
-      <br>
+    <td width="60%" style="vertical-align: middle;">
       <table>
         <thead>
           <tr>
@@ -96,7 +95,7 @@ SEOTube acts as an automated SEO strategist for your channel. Instead of manuall
         </tbody>
       </table>
     </td>
-    <td align="center" width="40%">
+    <td align="center" width="40%" style="vertical-align: middle;">
       <img src="backend/public/images/funnyImage.png" alt="SEOTube Comparison" width="350px">
     </td>
   </tr>
