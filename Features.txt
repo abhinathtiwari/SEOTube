@@ -35,9 +35,28 @@
 	- A daily cron job checks for users who have not uploaded within the configured threshold (`REMINDER_THRESHOLD_DAYS`) and sends a reminder email with five AI-generated video ideas.
 	- This reminder process runs separately from the optimization cron and helps improve user consistency.
 
-7. Additional features
-   - Thumbnail Update
-   - 
+7. Future Plans
+   Major Feature Addions
+   - On demand thumbnail update
+   - Video Upload from SEOTube. SEOTube will take out audio from video and send it to ai. Ai will generate metadata for the video including thumnail, timestamp, language, title, description, tags, catergoryId, etc and will upload the video to youtube.
+   - User will be able to add some channel as a competitor, and SEOTube will analyze the competitor's videos and generate ideas for the user.
+   -
+
+   Existing Feature Enhancements
+   - Login with Google account directly and Gmail verificaiton
+   - Metadata will be generated using the most trending videos and competitors content on the same topic
+   - AI suggestions will be given by searching the youtube for similar niche
+   - Extra personalization features for user including choosing the AI model.
+   - User will set the alert time for the upload reminder.
+   - Video analysis will be done on other factors like impression, CTR, etc. 
+   - Cron Job will only optimize a video again in next cycle if there is no change in video's performance.
+
+
+   Scallability Enhancements
+   - Division of data in different collections
+   - Cron jobs will be scheduled to run at specific times according to the set of users
+   - Use of TOON in place of JSON to save AI token usage.
+   
 
 
 
