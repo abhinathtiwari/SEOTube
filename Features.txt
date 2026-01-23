@@ -40,7 +40,7 @@
    - On demand thumbnail update
    - Video Upload from SEOTube. SEOTube will take out audio from video and send it to ai. Ai will generate metadata for the video including thumnail, timestamp, language, title, description, tags, catergoryId, etc and will upload the video to youtube.
    - User will be able to add some channel as a competitor, and SEOTube will analyze the competitor's videos and generate ideas for the user.
-   -
+   - AI Personalization via RAG (Retrieval-Augmented Generation).
 
    Existing Feature Enhancements
    - Login with Google account directly and Gmail verificaiton
@@ -53,7 +53,7 @@
 
 
    Scallability Enhancements
-   - Division of data in different collections
+   - Division of data in different collections in Database
    - Cron jobs will be scheduled to run at specific times according to the set of users
    - Use of TOON in place of JSON to save AI token usage.
    
