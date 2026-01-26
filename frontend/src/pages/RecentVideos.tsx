@@ -22,6 +22,7 @@ export default function RecentVideos() {
   const [loading, setLoading] = useState(false);
   const [optimizingId, setOptimizingId] = useState<string | null>(null);
   const [recentlyUpdated, setRecentlyUpdated] = useRecoilState(recentlyUpdatedState);
+  const [generatingThumbId, setGeneratingThumbId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchVideos(currentPageToken);
@@ -82,6 +83,22 @@ export default function RecentVideos() {
     }
   };
 
+  const handleOptimizedThumbnail = async (videoId: string) => {
+    if (generatingThumbId) return;
+    if (!window.confirm("Generate a new AI Optimized Thumbnail? This will replace the current one.")) return;
+    
+    setGeneratingThumbId(videoId);
+    try {
+      await api.post(`/youtube/generate-optimized-thumbnail/${videoId}`);
+      alert("Thumbnail optimized! It may take a moment to appear.");
+    } catch (err) {
+      console.error("Thumbnail generation failed", err);
+      alert("Failed to generate thumbnail.");
+    } finally {
+      setGeneratingThumbId(null);
+    }
+  };
+
   return (
     <Layout>
       <div className="recent-videos-container">
@@ -102,7 +119,14 @@ export default function RecentVideos() {
               return (
                 <Card key={video.videoId} className="video-card glass-morph">
                   <div className="video-thumbnail-wrapper">
-                    <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
+                    <img 
+                      src={video.thumbnail} 
+                      alt={video.title} 
+                      className={`video-thumbnail ${generatingThumbId === video.videoId ? "uploading" : ""}`} 
+                      onDoubleClick={() => handleOptimizedThumbnail(video.videoId)}
+                      title="Double click to AI Optimize Thumbnail"
+                      style={{ cursor: 'pointer' }}
+                    />
                     {isOptimized && <div className="optimized-badge">Optimized</div>}
                   </div>
                   <div className="video-info">
